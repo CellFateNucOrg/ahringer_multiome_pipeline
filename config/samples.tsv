@@ -1,0 +1,5 @@
+sample_id	gex_fastq_dir	gex_fastq_prefix	atac_fastq_dir	atac_fastq_prefix	batch	stage_group	idr_rep	utr_ext	barhop	ambient
+PMW941_1	/mnt/meister.data/jsemple/20260728_ma_10x_multi_PMW941_1/ahringer_pipeline_claude/fastq	TEV0_GEX	/mnt/meister.data/jsemple/20260728_ma_10x_multi_PMW941_1/ahringer_pipeline_claude/fastq	TEV0_ATAC_1	batch1	l3	1	yes	NA	NA
+PMW941_1			/mnt/meister.data/jsemple/20260728_ma_10x_multi_PMW941_1/ahringer_pipeline_claude/fastq	TEV0_ATAC_2	batch1	l3	1	yes	NA	NA
+PMW941_1			/mnt/meister.data/jsemple/20260728_ma_10x_multi_PMW941_1/ahringer_pipeline_claude/fastq	TEV0_ATAC_3	batch1	l3	1	yes	NA	NA
+PMW941_1			/mnt/meister.data/jsemple/20260728_ma_10x_multi_PMW941_1/ahringer_pipeline_claude/fastq	TEV0_ATAC_4	batch1	l3	1	yes	NA	NA

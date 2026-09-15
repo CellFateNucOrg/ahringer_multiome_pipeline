@@ -1,0 +1,9 @@
+# OPTIONAL manual table used by final_cell_type_assignment.R (paper: manual_clusters_reassignment.20240430.txt)
+# Fill in AFTER stage 7, by inspecting plots/lineage_annotation and plots/batch_removal UMAPs (wsnn_res.4 clusters,
+# i.e. 'seurat_clusters' of seurat_objects/combined_all_samples_SCT.<annotation>.WNN_clean.rds).
+# Format: <seurat cluster number> TAB <lineage label>. The resulting cell type is label+cluster, e.g. ABxxxxx10.
+# Labels used in the paper: ABxxxxx ABxxxxxx MSxxx MSxxxx Cxxx DxxCxxx unassigned
+# Lines starting with '#' are ignored. Clusters not listed (and not annotated by markers) become 'unassigned'.
+#10	ABxxxxx
+#20	ABxxxxxx
+#28	MSxxx

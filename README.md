@@ -1,4 +1,4 @@
-# C. elegans snMultiome pipeline
+# Ahringer multiome pipeline
 
 This pipeline re-implements the single-nucleus multiome (10x GEX + ATAC) analysis from:
 
@@ -115,4 +115,4 @@ These parts of the paper need data other than the multiome FASTQs, or files that
   for new data.
 * The pipeline has been syntax-checked, but it has not been run end-to-end on real data. Expect to tune resources (`RES_*`)
   and check the plots at each manual step.
-# ahringer_multiome_pipeline
+

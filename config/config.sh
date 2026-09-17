@@ -27,7 +27,8 @@ ENV_MEME=mo_meme
 # ---------- Slurm ----------
 #SLURM_ACCOUNT="jsemple"
 #SLURM_PARTITION="all"
-SLURM_EXTRA=""            # e.g. "--mail-type=END,FAIL --mail-user=you@unibe.ch"
+SLURM_EXTRA="--mail-type=FAIL --mail-user=jennifer.semple@unibe.ch"   # e.g. "--mail-type=END,FAIL --mail-user=you@unibe.ch"
+SCRATCH_DIR="/scratch/${USER}"  # node-local scratch for BAM sorting temp files; leave empty to use the output dir
 
 # Resources per job type (passed to sbatch; override freely)
 RES_default="--cpus-per-task=1 --mem=8G --time=02:00:00"
@@ -36,7 +37,8 @@ RES_mkref="--cpus-per-task=12 --mem=64G --time=12:00:00"
 RES_star_index="--cpus-per-task=12 --mem=48G --time=04:00:00"
 RES_cellranger="--cpus-per-task=16 --mem=128G --time=48:00:00"
 RES_fragments="--cpus-per-task=2 --mem=32G --time=06:00:00"
-RES_starsolo="--cpus-per-task=12 --mem=96G --time=24:00:00"
+RES_starsolo="--cpus-per-task=12 --mem=64G --time=36:00:00"
+RES_star_sort="--cpus-per-task=8 --mem=128G --time=24:00:00"
 RES_dedup="--cpus-per-task=8 --mem=96G --time=24:00:00"
 RES_bulk_peaks="--cpus-per-task=2 --mem=48G --time=12:00:00"
 RES_utr_extension="--cpus-per-task=2 --mem=64G --time=12:00:00"

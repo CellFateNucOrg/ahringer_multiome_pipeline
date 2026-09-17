@@ -11,7 +11,7 @@ outdir=data/sc/rnaseq/$id/star_$idx
 prefix=$outdir/star_${idx}_
 mkdir -p $outdir
 
-if [[ -s ${prefix}Solo.out/GeneFull/raw/UniqueAndMult-EM.mtx && -s ${prefix}Aligned.sortedByCoord.out.bam ]]; then
+if [[ -s ${prefix}Solo.out/GeneFull/raw/UniqueAndMult-EM.mtx ]]; then
     log "$id: STARsolo output exists, skipping alignment"
 else
     dir=$(sample_get "$id" gex_fastq_dir)
@@ -26,14 +26,12 @@ else
     R1=$(IFS=,; echo "${r1[*]}"); R2=$(IFS=,; echo "${r2[*]}")
     log "$id: R2=$R2"
     log "$id: R1=$R1"
-    # Use 75% of the job's allocated memory for BAM sorting (in bytes)
-    bam_sort_ram=$(( ${SLURM_MEM_PER_NODE:-96000} * 1024 * 1024 * 3 / 4 ))
     # shellcheck disable=SC2086
     STAR --genomeDir star_idx/$idx --readFilesIn $R2 $R1 --soloType CB_UMI_Simple \
          --soloCBwhitelist whitelist/737K-arc-v1.txt --soloUMIlen 12 --soloCellFilter None --soloFeatures GeneFull \
          --soloMultiMappers EM --readFilesCommand zcat --runThreadN "${SLURM_CPUS_PER_TASK:-12}" \
-         --outFileNamePrefix $prefix --outSAMtype BAM SortedByCoordinate --outWigType wiggle --twopassMode None \
-         --limitBAMsortRAM $bam_sort_ram --outSAMattributes NH HI nM AS CR UR CB UB GX GN sS sQ sM RG XS \
+         --outFileNamePrefix $prefix --outSAMtype BAM Unsorted --twopassMode None \
+         --outSAMattributes NH HI nM AS CR UR GX GN sS sQ sM RG XS \
          --outSAMattrRGline "ID:"$id --alignIntronMax 20000 ${STAR_EXTRA_OPTS}
 fi
 

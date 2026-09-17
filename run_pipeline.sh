@@ -106,7 +106,8 @@ case $STAGE in
     c=$(submit cellranger cr_count "" --array=1-"$N" -- "$J/cellranger_count.sh")
     submit fragments atac_fragments "$c" --array=1-"$N" -- "$J/atac_fragments.sh" >/dev/null
     s=$(submit starsolo starsolo_${WS} "" --array=1-"$N" -- "$J/starsolo.sh" "$WS")
-    submit dedup star_dedup "$s" --array=1-"$N" -- "$J/star_dedup.sh" "$WS" >/dev/null
+    t=$(submit star_sort star_sort_${WS} "$s" --array=1-"$N" -- "$J/star_sort.sh" "$WS")
+    submit dedup star_dedup "$t" --array=1-"$N" -- "$J/star_dedup.sh" "$WS" >/dev/null
     ;;
 3|utr_extension)
     [[ -n "$(samples_where utr_ext yes)" ]] || die "no sample has utr_ext=yes in samples.tsv"

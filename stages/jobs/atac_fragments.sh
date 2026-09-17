@@ -11,10 +11,15 @@ sample_id=$(sample_by_index "${SLURM_ARRAY_TASK_ID}")
 outs=data/sc/cellranger_arc/$sample_id/outs
 
 no_dash=$outs/atac_fragments_no_dash.tsv.gz
+corrected=$outs/atac_fragments_barcode_corrected.tsv.gz
+
+if [[ -s $corrected && -s ${corrected}.tbi ]]; then
+    log "$sample_id: fragment files exist, skipping"; exit 0
+fi
+
 zcat $outs/atac_fragments.tsv.gz | awk 'BEGIN{OFS="\t"} /^#/{print; next} {sub(/-.*$/, "", $4); print}' | bgzip -f > $no_dash
 tabix -f -p bed $no_dash
 
-corrected=$outs/atac_fragments_barcode_corrected.tsv.gz
 zcat $no_dash | awk -v var="$sample_id" 'BEGIN{OFS="\t";} /^#/{print; next} {print $1, $2, $3, var "_" $4, $5}' | bgzip -f > $corrected
 tabix -f -p bed $corrected
 log "$sample_id: fragment files written"

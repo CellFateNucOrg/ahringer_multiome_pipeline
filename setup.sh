@@ -27,6 +27,9 @@ setup_envs() {
     done
     activate_env "$ENV_R"
     Rscript "${PIPELINE_DIR}/envs/install_r_extras.R"
+    # sinto from bioconda has a broken pkg_resources dependency; reinstall via pip to fix it
+    activate_env "$ENV_TOOLS"
+    pip install --force-reinstall --no-deps sinto --quiet
 }
 
 setup_project() {

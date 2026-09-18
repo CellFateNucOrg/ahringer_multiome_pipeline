@@ -35,5 +35,9 @@ else
          --outSAMattrRGline "ID:"$id --alignIntronMax 20000 ${STAR_EXTRA_OPTS}
 fi
 
-python scripts/STARsolo_output_parser.py $id $idx ${CANON}.gene_name.txt
+if [[ -s ${prefix}Solo.out/GeneFull/raw/um_reads/matrix.mtx.gz ]]; then
+    log "$id: STARsolo parser output exists, skipping"
+else
+    python scripts/STARsolo_output_parser.py $id $idx ${CANON}.gene_name.txt
+fi
 log "$id: STARsolo ($idx) done"

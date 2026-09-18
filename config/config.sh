@@ -7,7 +7,7 @@
 
 # ---------- Paths ----------
 # Output/working directory on the cluster (created if missing). All results go here.
-PROJECT_DIR=/mnt/meister.data/jsemple/20260728_ma_10x_multi_PMW941_1/ahringer_pipeline_claude
+PROJECT_DIR=/mnt/meister.data/jsemple/20260728_ma_10x_multi_l3_PMW941_1/ahringer_pipeline_claude
 
 # Sample sheet (tab-separated, see config/samples.tsv)
 SAMPLES_TSV=${PIPELINE_DIR}/config/samples.tsv

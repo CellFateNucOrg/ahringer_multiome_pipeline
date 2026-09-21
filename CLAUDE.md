@@ -56,12 +56,18 @@ Runs `samtools sort` + `samtools index`, then generates forward/reverse strand C
 Deletes the unsorted BAM after sorting to save space. Cleans up scratch dir on exit.
 
 ### sinto / pkg_resources error
-bioconda's `sinto` package has a broken `pkg_resources` dependency. Fix:
+bioconda's `sinto` uses `pkg_resources` (from `setuptools`) which is missing in the env.
+Neither `pip install --force-reinstall --no-deps sinto` nor `conda install setuptools` fixes it.
+The correct fix is to patch `arguments.py` directly:
 ```bash
-pip install --force-reinstall --no-deps sinto
+conda activate mo_tools
+sed -i 's/^import pkg_resources$/from importlib.metadata import version as _pkg_version/' \
+    $CONDA_PREFIX/lib/python3.10/site-packages/sinto/arguments.py
+sed -i 's/version = pkg_resources.require("sinto")\[0\].version/version = _pkg_version("sinto")/' \
+    $CONDA_PREFIX/lib/python3.10/site-packages/sinto/arguments.py
 ```
-**Do not** use `pip install --force-reinstall sinto` (without `--no-deps`) — this tries to rebuild
-`umi_tools` from source and fails. `umi_tools` must always be installed via conda.
+`importlib.metadata` is built into Python 3.10 — no extra install needed.
+Verify with `sinto --version` (should return `sinto 0.10.1`).
 The fix is also applied in `setup.sh` after env creation.
 
 ### Resource settings (tuned for this dataset)

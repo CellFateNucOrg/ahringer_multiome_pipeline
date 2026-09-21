@@ -27,9 +27,17 @@ setup_envs() {
     done
     activate_env "$ENV_R"
     Rscript "${PIPELINE_DIR}/envs/install_r_extras.R"
-    # sinto from bioconda has a broken pkg_resources dependency; reinstall via pip to fix it
+    # sinto from bioconda imports pkg_resources (setuptools) which is absent in this env.
+    # pip reinstall does not fix it; patch arguments.py to use importlib.metadata instead.
     activate_env "$ENV_TOOLS"
-    pip install --force-reinstall --no-deps sinto --quiet
+    local sinto_args="${CONDA_PREFIX}/lib/python3.10/site-packages/sinto/arguments.py"
+    if [[ -f "$sinto_args" ]]; then
+        sed -i 's/^import pkg_resources$/from importlib.metadata import version as _pkg_version/' "$sinto_args"
+        sed -i 's/version = pkg_resources\.require("sinto")\[0\]\.version/version = _pkg_version("sinto")/' "$sinto_args"
+        log "patched sinto/arguments.py to use importlib.metadata"
+    else
+        log "WARNING: sinto arguments.py not found at $sinto_args — skipping patch"
+    fi
 }
 
 setup_project() {

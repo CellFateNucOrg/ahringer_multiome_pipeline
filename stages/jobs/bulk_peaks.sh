@@ -12,9 +12,20 @@ input_files=()
 for id in $(samples_where utr_ext yes); do input_files+=("data/sc/cellranger_arc/$id/outs/atac_fragments.tsv.gz"); done
 log "fragments: ${input_files[*]}"
 
+# Use node-local scratch for sort temp files if SCRATCH_DIR is set, otherwise fall back to output_dir/tmp
+if [[ -n "${SCRATCH_DIR:-}" ]]; then
+    sort_tmp="${SCRATCH_DIR}/bulk_peaks_${SLURM_JOB_ID:-0}"
+    mkdir -p "$sort_tmp"
+    trap 'rm -rf "$sort_tmp"' EXIT
+    log "using scratch dir for sort: $sort_tmp"
+else
+    sort_tmp="$output_dir/tmp"
+    log "no SCRATCH_DIR set, using $sort_tmp for sort"
+fi
+
 # split each fragment >=150bp into its two Tn5 cut sites, each extended to 150bp
 zcat "${input_files[@]}" | grep -v "#" | awk 'BEGIN{OFS="\t";}{if ($3 - $2 < 150) print; else if ($2 - 75 < 0) print $1, 0, $2 + 75, $4, $5 "\n" $1, $3-75, $3 + 75, $4, $5; else print $1, $2 - 75, $2 + 75, $4, $5 "\n" $1, $3-75, $3 + 75, $4, $5}' \
-    | sort -S 60% -T $output_dir/tmp -k 1,1 -k2,2n > $output_dir/resized_fragments.all.bed
+    | sort -S 60% -T "$sort_tmp" -k 1,1 -k2,2n > $output_dir/resized_fragments.all.bed
 
 macs2 callpeak --call-summits --bdg --SPMR --extsize 150 --shift 0 --gsize ce --keep-dup all --nomodel -n resized_fragments.all_samples --outdir $output_dir/macs -t $output_dir/resized_fragments.all.bed
 sort -k 1,1 -k2,2n $output_dir/macs/resized_fragments.all_samples_treat_pileup.bdg > $output_dir/macs/resized_fragments.all_samples_treat_pileup.sorted.bdg

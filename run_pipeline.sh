@@ -158,9 +158,13 @@ case $STAGE in
         "${MERGED_PREFIX}.all_cells.MACS_peaks.rds" "$ROUND1_DIR/all_peaks_merge.intergenic.00001.bed" WNN "$ANNOTATION")
     b=$(submit r_large batch_removal "$w" -- "$J/r_script.sh" batch_enriched_clusters_removal.R \
         "${MERGED_PREFIX}.WNN.rds" "$ANNOTATION")
-    submit r_large lineage_annotation "$b" -- "$J/r_script.sh" lineage_specific_annotation.R \
-        "${MERGED_PREFIX}.WNN_clean.rds" cell_type_annotation_all "$ANNOTATION" >/dev/null
-    echo "When finished: inspect plots/lineage_annotation and optionally fill $LATE_CLUSTER_TABLE" >&2
+    # L3 tissue annotation: runs all marker tables listed in MARKER_LIST_FILE,
+    # produces per-table tissue-type UMAPs and assignment files.
+    # Set MARKER_LIST_FILE and MARKER_TAXONOMY_FILE in config/config.sh.
+    submit r_large l3_annotation "$b" -- "$J/r_script.sh" l3_lineage_annotation.R \
+        "${MERGED_PREFIX}.WNN_clean.rds" "$MARKER_LIST_FILE" "$ANNOTATION" "$MARKER_TAXONOMY_FILE" >/dev/null
+    echo "When finished: inspect plots/l3_lineage_annotation/ for tissue-type UMAPs." >&2
+    echo "Assignment files in cell_type_annotation_all/<label>.cell_assignment.$ANNOTATION.txt" >&2
     ;;
 8|cell_types)
     need "${MERGED_PREFIX}.WNN_clean.rds" "stage 7"

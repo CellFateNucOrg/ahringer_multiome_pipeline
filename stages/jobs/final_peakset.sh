@@ -7,6 +7,9 @@ activate_env "$ENV_TOOLS"
 export LC_ALL=C
 
 idr_dir=$ROUND2_DIR/cell_type/macs_peak_frag_counts/IDR
+
+[[ -s $ROUND2_DIR/all_peaks.bed ]] && { log "final peak set already exists ($(wc -l < $ROUND2_DIR/all_peaks.bed) sites), skipping"; exit 0; }
+
 cat $idr_dir/*_idr.${IDR_FINAL_SET}.bed | sort -k 1,1 -k2,2n | mergeBed -i stdin -c 4 -o distinct \
     | awk 'BEGIN{OFS="\t";}{print $1, $2 + int(($3-$2)/2) - 100, $2 + int(($3-$2)/2) + 100, $4}' \
     | intersectBed -a stdin -b $BLACKLIST -v > $ROUND2_DIR/all_peaks_merge.intergenic.00001.bed

@@ -1,0 +1,306 @@
+raw_name	tissue_type	tissue_subtype	canonical_cell_type	canonical_col
+Coelomocyte	Coelomocytes	Coelomocytes	Coelomocytes	Coelomocytes.Coelomocytes.Coelomocytes
+Coelomocytes	Coelomocytes	Coelomocytes	Coelomocytes	Coelomocytes.Coelomocytes.Coelomocytes
+Excretory_cell	Excretory	Excretory	Excretory_cell	Excretory.Excretory.Excretory_cell
+Excretory cells	Excretory	Excretory	Excretory_cell	Excretory.Excretory.Excretory_cell
+Excretory_cells	Excretory	Excretory	Excretory_cell	Excretory.Excretory.Excretory_cell
+Excretory gland	Excretory	Excretory_gland	Excretory_gland	Excretory.Excretory_gland.Excretory_gland
+Excretory_gland_cell	Excretory	Excretory_gland	Excretory_gland	Excretory.Excretory_gland.Excretory_gland
+Rectal_gland	Excretory	Rectal_gland	Rectal_gland	Excretory.Rectal_gland.Rectal_gland
+Apoptotic germ cells	Germline	Germline	Apoptotic_germ	Germline.Germline.Apoptotic_germ
+Differentiated germ	Germline	Germline	Differentiated_germ	Germline.Germline.Differentiated_germ
+Germline	Germline	Germline	Germline	Germline.Germline.Germline
+Syncytial pachytene spermatocytes	Germline	Germline	Germline	Germline.Germline.Germline
+Meiotic germ cells	Germline	Germline	Meiotic_germ	Germline.Germline.Meiotic_germ
+Mitotic germ cells	Germline	Germline	Mitotic_germ	Germline.Germline.Mitotic_germ
+Mitotic germ cells 	Germline	Germline	Mitotic_germ	Germline.Germline.Mitotic_germ
+Oocytes	Germline	Oocyte	Oocyte	Germline.Oocyte.Oocyte
+Mature sperm	Germline	Sperm	Mature_sperm	Germline.Sperm.Mature_sperm
+Syncitial pachytene spermatocytes 	Germline	Sperm	Pachytene_spermatocytes	Germline.Sperm.Pachytene_spermatocytes
+Seminal vesicle (male)	Germline	Sperm	Seminal_vesicle	Germline.Sperm.Seminal_vesicle
+Sperm	Germline	Sperm	Sperm	Germline.Sperm.Sperm
+Spermatocytes	Germline	Sperm	Spermatocytes	Germline.Sperm.Spermatocytes
+AMsh	Glia	Amphid_sheath	AMsh	Glia.Amphid_sheath.AMsh
+CEPsh	Glia	Cephalic_sheath	CEPsh	Glia.Cephalic_sheath.CEPsh
+Cephalic sheath	Glia	Cephalic_sheath	Cephalic_sheath	Glia.Cephalic_sheath.Cephalic_sheath
+GLR	Glia	GLR	GLR	Glia.GLR.GLR
+Glia	Glia	Glia	Glia	Glia.Glia.Glia
+Glia_1	Glia	Glia	Glia_1	Glia.Glia.Glia_1
+Glia_2	Glia	Glia	Glia_2	Glia.Glia.Glia_2
+Glia_3	Glia	Glia	Glia_3	Glia.Glia.Glia_3
+Glia_4	Glia	Glia	Glia_4	Glia.Glia.Glia_4
+Glia_5	Glia	Glia	Glia_5	Glia.Glia.Glia_5
+PHsh	Glia	Phasmid_sheath	PHsh	Glia.Phasmid_sheath.PHsh
+Amphid and phasmid sheath	Glia	Sheath_cell	Amphid_phasmid_sheath	Glia.Sheath_cell.Amphid_phasmid_sheath
+Am/PH_sheath_cells	Glia	Sheath_cell	Amphid_phasmid_sheath	Glia.Sheath_cell.Amphid_phasmid_sheath
+AMso	Glia	Socket_cell	AMso	Glia.Socket_cell.AMso
+Amphid socket	Glia	Socket_cell	Amphid_socket	Glia.Socket_cell.Amphid_socket
+Arcade_cell	Glia	Socket_cell	Arcade_cell	Glia.Socket_cell.Arcade_cell
+Arcade cells and rectal gland subpopulation	Glia	Socket_cell	Arcade_cell	Glia.Socket_cell.Arcade_cell
+Cephalic and inner labial socket	Glia	Socket_cell	Cephalic_socket	Glia.Socket_cell.Cephalic_socket
+PHso	Glia	Socket_cell	PHso	Glia.Socket_cell.PHso
+Phasmid socket	Glia	Socket_cell	Phasmid_socket	Glia.Socket_cell.Phasmid_socket
+Socket_cells	Glia	Socket_cell	Socket_cell	Glia.Socket_cell.Socket_cell
+Distal_tip_cell	Gonad	Distal_tip	Distal_tip	Gonad.Distal_tip.Distal_tip
+Distal tip	Gonad	Distal_tip	Distal_tip	Gonad.Distal_tip.Distal_tip
+Distal_tip_cells	Gonad	Distal_tip	Distal_tip	Gonad.Distal_tip.Distal_tip
+Gonad	Gonad	Gonad	Gonad	Gonad.Gonad.Gonad
+Somatic_gonad_precursors	Gonad	Gonad	Somatic_gonad_precursor	Gonad.Gonad.Somatic_gonad_precursor
+Gonadal_sheath_cell	Gonad	Gonadal_sheath	Gonadal_sheath	Gonad.Gonadal_sheath.Gonadal_sheath
+Unassigned sheath cells	Gonad	Gonadal_sheath	Gonadal_sheath	Gonad.Gonadal_sheath.Gonadal_sheath
+sh1 (gonadal sheath distal)	Gonad	Gonadal_sheath	sh1	Gonad.Gonadal_sheath.sh1
+sh2 (gonadal sheath distal)	Gonad	Gonadal_sheath	sh2	Gonad.Gonadal_sheath.sh2
+sh3_sh4 (gonadal sheath proximal)	Gonad	Gonadal_sheath	sh3_sh4	Gonad.Gonadal_sheath.sh3_sh4
+sh5 (gonadal sheath proximal)	Gonad	Gonadal_sheath	sh5	Gonad.Gonadal_sheath.sh5
+Spermatheca	Gonad	Spermatheca	Spermatheca	Gonad.Spermatheca.Spermatheca
+Spermatheca bag distal	Gonad	Spermatheca	Spermatheca_bag_distal	Gonad.Spermatheca.Spermatheca_bag_distal
+Spermatheca bag proximal	Gonad	Spermatheca	Spermatheca_bag_proximal	Gonad.Spermatheca.Spermatheca_bag_proximal
+Spermatheca neck distal	Gonad	Spermatheca	Spermatheca_neck_distal	Gonad.Spermatheca.Spermatheca_neck_distal
+Spermatheca neck distal-most	Gonad	Spermatheca	Spermatheca_neck_distalmost	Gonad.Spermatheca.Spermatheca_neck_distalmost
+Spermathecal-uterine_junction_or_uterine_toroid	Gonad	Spermatheca	Spermathecal_uterine_junction	Gonad.Spermatheca.Spermathecal_uterine_junction
+Spermatheca-Uterine junction	Gonad	Spermatheca	Spermathecal_uterine_junction	Gonad.Spermatheca.Spermathecal_uterine_junction
+Uterine_cell	Gonad	Uterine	Uterine_cell	Gonad.Uterine.Uterine_cell
+Dorsal uterine cell	Gonad	Uterine	Uterine_cell	Gonad.Uterine.Uterine_cell
+Unassigned uterine cells	Gonad	Uterine	Uterine_cell	Gonad.Uterine.Uterine_cell
+Uterine toroid	Gonad	Uterine	Uterine_toroid	Gonad.Uterine.Uterine_toroid
+Uterine-vulval cells	Gonad	Uterine	Uterine_vulval	Gonad.Uterine.Uterine_vulval
+Unassigned sex-specific muscle	Gonad	Vulval	Unassigned_sex_muscle	Gonad.Vulval.Unassigned_sex_muscle
+Vulval_cells	Gonad	Vulval	Vulval_cell	Gonad.Vulval.Vulval_cell
+Vulval cells	Gonad	Vulval	Vulval_cell	Gonad.Vulval.Vulval_cell
+Vulval_precursors	Gonad	Vulval	Vulval_precursor	Gonad.Vulval.Vulval_precursor
+Epidermis	Hypodermis	Hypodermis	Epidermis_hyp7	Hypodermis.Hypodermis.Epidermis_hyp7
+Seam cells	Hypodermis	Hypodermis	Hypodermis	Hypodermis.Hypodermis.Hypodermis
+Non-seam_hypodermis	Hypodermis	Hypodermis	Hypodermis	Hypodermis.Hypodermis.Hypodermis
+Hypodermis	Hypodermis	Hypodermis	Hypodermis	Hypodermis.Hypodermis.Hypodermis
+Hypodermis head	Hypodermis	Hypodermis	Hypodermis_head	Hypodermis.Hypodermis.Hypodermis_head
+hyp4_to_hyp6	Hypodermis	Hypodermis	hyp4_to_hyp6	Hypodermis.Hypodermis.hyp4_to_hyp6
+hyp4_to_hyp6 and Tail hypodermis subpopulation	Hypodermis	Hypodermis	hyp4_to_hyp6	Hypodermis.Hypodermis.hyp4_to_hyp6
+hyp7	Hypodermis	Hypodermis	hyp7	Hypodermis.Hypodermis.hyp7
+hyp7 (hypodermis)	Hypodermis	Hypodermis	hyp7	Hypodermis.Hypodermis.hyp7
+Seam_cell	Hypodermis	Seam_cell	Seam_cell	Hypodermis.Seam_cell.Seam_cell
+Seam cells (bus+) and excretory duct subpopulation	Hypodermis	Seam_cell	Seam_cell	Hypodermis.Seam_cell.Seam_cell
+Seam cells (grd+)	Hypodermis	Seam_cell	Seam_cell	Hypodermis.Seam_cell.Seam_cell
+Uterine seam cells	Hypodermis	Seam_cell	Uterine_seam_cell	Hypodermis.Seam_cell.Uterine_seam_cell
+Intestinal/rectal_muscle	Intestine	Intestine	Intestinal/rectal_muscle	Intestine.Intestine.Intestinal/rectal_muscle
+Intestinal-rectal valve	Intestine	Intestine	Intestinal_rectal_valve	Intestine.Intestine.Intestinal_rectal_valve
+Intestine	Intestine	Intestine	Intestine	Intestine.Intestine.Intestine
+Intestine anterior	Intestine	Intestine	Intestine_anterior	Intestine.Intestine.Intestine_anterior
+Intestine middle	Intestine	Intestine	Intestine_middle	Intestine.Intestine.Intestine_middle
+Intestine posterior	Intestine	Intestine	Intestine_posterior	Intestine.Intestine.Intestine_posterior
+cat-4(+)ptps-1(+) intestine anterior	Intestine	Intestine	Intestine_subpopulation	Intestine.Intestine.Intestine_subpopulation
+Anal_muscle	Muscle	Anal_muscle	Anal_muscle	Muscle.Anal_muscle.Anal_muscle
+Anal muscle	Muscle	Anal_muscle	Anal_muscle	Muscle.Anal_muscle.Anal_muscle
+Body_wall_muscle	Muscle	Body_wall_muscle	Body_wall_muscle	Muscle.Body_wall_muscle.Body_wall_muscle
+Body_wall_muscle_anterior	Muscle	Body_wall_muscle	Body_wall_muscle	Muscle.Body_wall_muscle.Body_wall_muscle
+Body_wall_muscle anterior	Muscle	Body_wall_muscle	Body_wall_muscle	Muscle.Body_wall_muscle.Body_wall_muscle
+Body_wall_muscle posterior	Muscle	Body_wall_muscle	Body_wall_muscle	Muscle.Body_wall_muscle.Body_wall_muscle
+Body_wall_muscle middle	Muscle	Body_wall_muscle	Body_wall_muscle	Muscle.Body_wall_muscle.Body_wall_muscle
+Body wall muscle anterior	Muscle	Body_wall_muscle	Body_wall_muscle	Muscle.Body_wall_muscle.Body_wall_muscle
+Body wall muscle middle	Muscle	Body_wall_muscle	Body_wall_muscle	Muscle.Body_wall_muscle.Body_wall_muscle
+Body wall muscle posterior	Muscle	Body_wall_muscle	Body_wall_muscle	Muscle.Body_wall_muscle.Body_wall_muscle
+hmc	Muscle	Head_mesodermal_cell	hmc	Muscle.Head_mesodermal_cell.hmc
+Intestinal_rectal_muscle	Muscle	Intestinal_rectal_muscle	Intestinal_rectal_muscle	Muscle.Intestinal_rectal_muscle.Intestinal_rectal_muscle
+Sex_myoblasts	Muscle	Sex_myoblast	Sex_myoblast	Muscle.Sex_myoblast.Sex_myoblast
+Uterine_muscle	Muscle	Uterine_muscle	Uterine_muscle	Muscle.Uterine_muscle.Uterine_muscle
+Uterine muscle	Muscle	Uterine_muscle	Uterine_muscle	Muscle.Uterine_muscle.Uterine_muscle
+Uterine muscle 	Muscle	Uterine_muscle	Uterine_muscle	Muscle.Uterine_muscle.Uterine_muscle
+Vulval_muscle	Muscle	Vulval_muscle	Vulval_muscle	Muscle.Vulval_muscle.Vulval_muscle
+vm1	Muscle	Vulval_muscle	vm1	Muscle.Vulval_muscle.vm1
+vm1 (vulval muscle)	Muscle	Vulval_muscle	vm1	Muscle.Vulval_muscle.vm1
+vm2	Muscle	Vulval_muscle	vm2	Muscle.Vulval_muscle.vm2
+vm2 (vulval muscle)	Muscle	Vulval_muscle	vm2	Muscle.Vulval_muscle.vm2
+AS	Neurons	Cholinergic	AS	Neurons.Cholinergic.AS
+AS; DA_VA; DB_VB; and SAB	Neurons	Cholinergic	AS_DA_VA_DB_VB_SAB	Neurons.Cholinergic.AS_DA_VA_DB_VB_SAB
+Cholinergic_neurons	Neurons	Cholinergic	Cholinergic	Neurons.Cholinergic.Cholinergic
+Cholinergic	Neurons	Cholinergic	Cholinergic	Neurons.Cholinergic.Cholinergic
+DA	Neurons	Cholinergic	DA	Neurons.Cholinergic.DA
+DA1	Neurons	Cholinergic	DA1	Neurons.Cholinergic.DA1
+DA9	Neurons	Cholinergic	DA9	Neurons.Cholinergic.DA9
+DB	Neurons	Cholinergic	DB	Neurons.Cholinergic.DB
+DB01	Neurons	Cholinergic	DB01	Neurons.Cholinergic.DB01
+DB02	Neurons	Cholinergic	DB02	Neurons.Cholinergic.DB02
+SAA	Neurons	Cholinergic	SAA	Neurons.Cholinergic.SAA
+SAB	Neurons	Cholinergic	SAB	Neurons.Cholinergic.SAB
+VA	Neurons	Cholinergic	VA	Neurons.Cholinergic.VA
+VA1	Neurons	Cholinergic	VA1	Neurons.Cholinergic.VA1
+VA12	Neurons	Cholinergic	VA12	Neurons.Cholinergic.VA12
+VB	Neurons	Cholinergic	VB	Neurons.Cholinergic.VB
+VB01	Neurons	Cholinergic	VB01	Neurons.Cholinergic.VB01
+VB02	Neurons	Cholinergic	VB02	Neurons.Cholinergic.VB02
+VC	Neurons	Cholinergic	VC	Neurons.Cholinergic.VC
+VC_4_5	Neurons	Cholinergic	VC_4_5	Neurons.Cholinergic.VC_4_5
+ADE	Neurons	Dopaminergic	ADE	Neurons.Dopaminergic.ADE
+CEP	Neurons	Dopaminergic	CEP	Neurons.Dopaminergic.CEP
+Dopaminergic	Neurons	Dopaminergic	Dopaminergic	Neurons.Dopaminergic.Dopaminergic
+CEP_ADE_PDE	Neurons	Dopaminergic	Dopaminergic	Neurons.Dopaminergic.Dopaminergic
+PDE	Neurons	Dopaminergic	PDE	Neurons.Dopaminergic.PDE
+AVL	Neurons	GABAergic	AVL	Neurons.GABAergic.AVL
+DD	Neurons	GABAergic	DD	Neurons.GABAergic.DD
+DVB	Neurons	GABAergic	DVB	Neurons.GABAergic.DVB
+GABAergic	Neurons	GABAergic	GABAergic	Neurons.GABAergic.GABAergic
+GABAergic_neurons	Neurons	GABAergic	GABAergic	Neurons.GABAergic.GABAergic
+VD	Neurons	GABAergic	VD	Neurons.GABAergic.VD
+VD_DD	Neurons	GABAergic	VD_DD	Neurons.GABAergic.VD_DD
+RMD	Neurons	Head_motor	RMD	Neurons.Head_motor.RMD
+RMD_DV	Neurons	Head_motor	RMD_DV	Neurons.Head_motor.RMD_DV
+RMD_LR	Neurons	Head_motor	RMD_LR	Neurons.Head_motor.RMD_LR
+RME	Neurons	Head_motor	RME	Neurons.Head_motor.RME
+RME_DV	Neurons	Head_motor	RME_DV	Neurons.Head_motor.RME_DV
+RME_LR	Neurons	Head_motor	RME_LR	Neurons.Head_motor.RME_LR
+RMF	Neurons	Head_motor	RMF	Neurons.Head_motor.RMF
+RMG	Neurons	Head_motor	RMG	Neurons.Head_motor.RMG
+RMH	Neurons	Head_motor	RMH	Neurons.Head_motor.RMH
+SIA	Neurons	Head_motor	SIA	Neurons.Head_motor.SIA
+SIB	Neurons	Head_motor	SIB	Neurons.Head_motor.SIB
+SMB	Neurons	Head_motor	SMB	Neurons.Head_motor.SMB
+SMD	Neurons	Head_motor	SMD	Neurons.Head_motor.SMD
+SMD and subpopulation of RMD_LR and SAA	Neurons	Head_motor	SMD	Neurons.Head_motor.SMD
+ADA	Neurons	Interneuron	ADA	Neurons.Interneuron.ADA
+AIA	Neurons	Interneuron	AIA	Neurons.Interneuron.AIA
+AIB	Neurons	Interneuron	AIB	Neurons.Interneuron.AIB
+AIM	Neurons	Interneuron	AIM	Neurons.Interneuron.AIM
+AIN	Neurons	Interneuron	AIN	Neurons.Interneuron.AIN
+AIY	Neurons	Interneuron	AIY	Neurons.Interneuron.AIY
+AIZ	Neurons	Interneuron	AIZ	Neurons.Interneuron.AIZ
+ALA	Neurons	Interneuron	ALA	Neurons.Interneuron.ALA
+AUA	Neurons	Interneuron	AUA	Neurons.Interneuron.AUA
+AVA	Neurons	Interneuron	AVA	Neurons.Interneuron.AVA
+AVB	Neurons	Interneuron	AVB	Neurons.Interneuron.AVB
+AVD	Neurons	Interneuron	AVD	Neurons.Interneuron.AVD
+AVE	Neurons	Interneuron	AVE	Neurons.Interneuron.AVE
+AVF	Neurons	Interneuron	AVF	Neurons.Interneuron.AVF
+AVG	Neurons	Interneuron	AVG	Neurons.Interneuron.AVG
+AVH	Neurons	Interneuron	AVH	Neurons.Interneuron.AVH
+AVJ	Neurons	Interneuron	AVJ	Neurons.Interneuron.AVJ
+AVK	Neurons	Interneuron	AVK	Neurons.Interneuron.AVK
+AVL and DVB	Neurons	Interneuron	AVL_DVB	Neurons.Interneuron.AVL_DVB
+BDU	Neurons	Interneuron	BDU	Neurons.Interneuron.BDU
+CAN	Neurons	Interneuron	CAN	Neurons.Interneuron.CAN
+DVA	Neurons	Interneuron	DVA	Neurons.Interneuron.DVA
+DVC	Neurons	Interneuron	DVC	Neurons.Interneuron.DVC
+LUA	Neurons	Interneuron	LUA	Neurons.Interneuron.LUA
+Other_interneurons	Neurons	Interneuron	Other_interneurons	Neurons.Interneuron.Other_interneurons
+PDA	Neurons	Interneuron	PDA	Neurons.Interneuron.PDA
+PDB	Neurons	Interneuron	PDB	Neurons.Interneuron.PDB
+PVN	Neurons	Interneuron	PVN	Neurons.Interneuron.PVN
+PVP	Neurons	Interneuron	PVP	Neurons.Interneuron.PVP
+PVQ	Neurons	Interneuron	PVQ	Neurons.Interneuron.PVQ
+PVR	Neurons	Interneuron	PVR	Neurons.Interneuron.PVR
+PVT	Neurons	Interneuron	PVT	Neurons.Interneuron.PVT
+PVW	Neurons	Interneuron	PVW	Neurons.Interneuron.PVW
+RIA	Neurons	Interneuron	RIA	Neurons.Interneuron.RIA
+RIB	Neurons	Interneuron	RIB	Neurons.Interneuron.RIB
+RIB and RIG	Neurons	Interneuron	RIB_RIG	Neurons.Interneuron.RIB_RIG
+RIC	Neurons	Interneuron	RIC	Neurons.Interneuron.RIC
+RID	Neurons	Interneuron	RID	Neurons.Interneuron.RID
+RIF	Neurons	Interneuron	RIF	Neurons.Interneuron.RIF
+RIG	Neurons	Interneuron	RIG	Neurons.Interneuron.RIG
+RIH	Neurons	Interneuron	RIH	Neurons.Interneuron.RIH
+RIH_RIR	Neurons	Interneuron	RIH_RIR	Neurons.Interneuron.RIH_RIR
+RIM	Neurons	Interneuron	RIM	Neurons.Interneuron.RIM
+RIP	Neurons	Interneuron	RIP	Neurons.Interneuron.RIP
+RIR	Neurons	Interneuron	RIR	Neurons.Interneuron.RIR
+RIS	Neurons	Interneuron	RIS	Neurons.Interneuron.RIS
+RIV	Neurons	Interneuron	RIV	Neurons.Interneuron.RIV
+XXX	Neurons	Interneuron	XXX	Neurons.Interneuron.XXX
+flp-1(+)	Neurons	Interneuron	flp-1(+)	Neurons.Interneuron.flp-1(+)
+flp-1(+)_interneurons	Neurons	Interneuron	flp-1(+)_interneurons	Neurons.Interneuron.flp-1(+)_interneurons
+HSN	Neurons	Motor	HSN	Neurons.Motor.HSN
+Neurons	Neurons	Neurons	Neurons	Neurons.Neurons.Neurons
+I1	Neurons	Pharyngeal_neuron	I1	Neurons.Pharyngeal_neuron.I1
+I2	Neurons	Pharyngeal_neuron	I2	Neurons.Pharyngeal_neuron.I2
+I3	Neurons	Pharyngeal_neuron	I3	Neurons.Pharyngeal_neuron.I3
+I4	Neurons	Pharyngeal_neuron	I4	Neurons.Pharyngeal_neuron.I4
+I5	Neurons	Pharyngeal_neuron	I5	Neurons.Pharyngeal_neuron.I5
+I5; I4	Neurons	Pharyngeal_neuron	I5_I4	Neurons.Pharyngeal_neuron.I5_I4
+I6	Neurons	Pharyngeal_neuron	I6	Neurons.Pharyngeal_neuron.I6
+M1	Neurons	Pharyngeal_neuron	M1	Neurons.Pharyngeal_neuron.M1
+M2	Neurons	Pharyngeal_neuron	M2	Neurons.Pharyngeal_neuron.M2
+M2; M3; M4; I2	Neurons	Pharyngeal_neuron	M2_M3_M4_I2	Neurons.Pharyngeal_neuron.M2_M3_M4_I2
+M2+M3+M4+I2	Neurons	Pharyngeal_neuron	M2_M3_M4_I2	Neurons.Pharyngeal_neuron.M2_M3_M4_I2
+M3	Neurons	Pharyngeal_neuron	M3	Neurons.Pharyngeal_neuron.M3
+M4	Neurons	Pharyngeal_neuron	M4	Neurons.Pharyngeal_neuron.M4
+M5	Neurons	Pharyngeal_neuron	M5	Neurons.Pharyngeal_neuron.M5
+MC	Neurons	Pharyngeal_neuron	MC	Neurons.Pharyngeal_neuron.MC
+MI	Neurons	Pharyngeal_neuron	MI	Neurons.Pharyngeal_neuron.MI
+NSM	Neurons	Pharyngeal_neuron	NSM	Neurons.Pharyngeal_neuron.NSM
+Pharyngeal_neurons	Neurons	Pharyngeal_neuron	Pharyngeal_neurons	Neurons.Pharyngeal_neuron.Pharyngeal_neurons
+ADF	Neurons	Sensory	ADF	Neurons.Sensory.ADF
+ADL	Neurons	Sensory	ADL	Neurons.Sensory.ADL
+AFD	Neurons	Sensory	AFD	Neurons.Sensory.AFD
+ALM	Neurons	Sensory	ALM	Neurons.Sensory.ALM
+ALN	Neurons	Sensory	ALN	Neurons.Sensory.ALN
+AQR	Neurons	Sensory	AQR	Neurons.Sensory.AQR
+ASE	Neurons	Sensory	ASE	Neurons.Sensory.ASE
+ASEL	Neurons	Sensory	ASEL	Neurons.Sensory.ASEL
+ASER	Neurons	Sensory	ASER	Neurons.Sensory.ASER
+ASF	Neurons	Sensory	ASF	Neurons.Sensory.ASF
+ASG	Neurons	Sensory	ASG	Neurons.Sensory.ASG
+ASH	Neurons	Sensory	ASH	Neurons.Sensory.ASH
+ASI	Neurons	Sensory	ASI	Neurons.Sensory.ASI
+ASJ	Neurons	Sensory	ASJ	Neurons.Sensory.ASJ
+ASK	Neurons	Sensory	ASK	Neurons.Sensory.ASK
+AVM	Neurons	Sensory	AVM	Neurons.Sensory.AVM
+AWA	Neurons	Sensory	AWA	Neurons.Sensory.AWA
+AWB	Neurons	Sensory	AWB	Neurons.Sensory.AWB
+AWC	Neurons	Sensory	AWC	Neurons.Sensory.AWC
+AWC_ON	Neurons	Sensory	AWC	Neurons.Sensory.AWC
+AWC_OFF	Neurons	Sensory	AWC	Neurons.Sensory.AWC
+BAG	Neurons	Sensory	BAG	Neurons.Sensory.BAG
+Canal_associated_neurons	Neurons	Sensory	CAN	Neurons.Sensory.CAN
+Ciliated_sensory_neurons	Neurons	Sensory	Ciliated_sensory_neurons	Neurons.Sensory.Ciliated_sensory_neurons
+FLP	Neurons	Sensory	FLP	Neurons.Sensory.FLP
+IL1	Neurons	Sensory	IL1	Neurons.Sensory.IL1
+IL1 and subpopulation of OLL	Neurons	Sensory	IL1	Neurons.Sensory.IL1
+IL2	Neurons	Sensory	IL2	Neurons.Sensory.IL2
+IL2_DV	Neurons	Sensory	IL2_DV	Neurons.Sensory.IL2_DV
+IL2_LR	Neurons	Sensory	IL2_LR	Neurons.Sensory.IL2_LR
+OLL	Neurons	Sensory	OLL	Neurons.Sensory.OLL
+OLQ	Neurons	Sensory	OLQ	Neurons.Sensory.OLQ
+Oxygen_sensory_neurons	Neurons	Sensory	Oxygen_sensory_neurons	Neurons.Sensory.Oxygen_sensory_neurons
+PHA	Neurons	Sensory	PHA	Neurons.Sensory.PHA
+PHA_PHB; LUA	Neurons	Sensory	PHA_PHB	Neurons.Sensory.PHA_PHB
+PHB	Neurons	Sensory	PHB	Neurons.Sensory.PHB
+PHC	Neurons	Sensory	PHC	Neurons.Sensory.PHC
+PLM	Neurons	Sensory	PLM	Neurons.Sensory.PLM
+PLM_ALM	Neurons	Sensory	PLM_ALM	Neurons.Sensory.PLM_ALM
+PLN	Neurons	Sensory	PLN	Neurons.Sensory.PLN
+PQR	Neurons	Sensory	PQR	Neurons.Sensory.PQR
+PVD	Neurons	Sensory	PVD	Neurons.Sensory.PVD
+PVD_FLP	Neurons	Sensory	PVD_FLP	Neurons.Sensory.PVD_FLP
+PVM	Neurons	Sensory	PVM	Neurons.Sensory.PVM
+PVM; AVM	Neurons	Sensory	PVM_AVM	Neurons.Sensory.PVM_AVM
+SDQ	Neurons	Sensory	SDQ	Neurons.Sensory.SDQ
+SDQ and subpopulation of NSM	Neurons	Sensory	SDQ	Neurons.Sensory.SDQ
+SDQ+NSM	Neurons	Sensory	SDQ+NSM	Neurons.Sensory.SDQ+NSM
+SDQ/ALN/PLN	Neurons	Sensory	SDQ_ALN_PLN	Neurons.Sensory.SDQ_ALN_PLN
+Touch_receptor	Neurons	Sensory	Touch_receptor	Neurons.Sensory.Touch_receptor
+Touch_receptor_neurons	Neurons	Sensory	Touch_receptor_neurons	Neurons.Sensory.Touch_receptor_neurons
+URA	Neurons	Sensory	URA	Neurons.Sensory.URA
+URB	Neurons	Sensory	URB	Neurons.Sensory.URB
+URX	Neurons	Sensory	URX	Neurons.Sensory.URX
+URX_AQR_PQR	Neurons	Sensory	URX_AQR_PQR	Neurons.Sensory.URX_AQR_PQR
+URY	Neurons	Sensory	URY	Neurons.Sensory.URY
+URY and subpopulation of PHC	Neurons	Sensory	URY	Neurons.Sensory.URY
+Marginal_cell	Pharynx	Pharyngeal_epithelia	Marginal_cell	Pharynx.Pharyngeal_epithelia.Marginal_cell
+Marginal cells	Pharynx	Pharyngeal_epithelia	Marginal_cell	Pharynx.Pharyngeal_epithelia.Marginal_cell
+Pharyngeal_epithelia	Pharynx	Pharyngeal_epithelia	Pharyngeal_epithelia	Pharynx.Pharyngeal_epithelia.Pharyngeal_epithelia
+Pharyngeal epithelia	Pharynx	Pharyngeal_epithelia	Pharyngeal_epithelia	Pharynx.Pharyngeal_epithelia.Pharyngeal_epithelia
+e1_e3 (pharyngeal epithelium)	Pharynx	Pharyngeal_epithelia	e1_e3	Pharynx.Pharyngeal_epithelia.e1_e3
+e2 (pharyngeal epithelium)	Pharynx	Pharyngeal_epithelia	e2	Pharynx.Pharyngeal_epithelia.e2
+Pharyngeal_gland_cell	Pharynx	Pharyngeal_gland	Pharyngeal_gland	Pharynx.Pharyngeal_gland.Pharyngeal_gland
+g1A	Pharynx	Pharyngeal_gland	Pharyngeal_gland	Pharynx.Pharyngeal_gland.Pharyngeal_gland
+g1P	Pharynx	Pharyngeal_gland	Pharyngeal_gland	Pharynx.Pharyngeal_gland.Pharyngeal_gland
+g2	Pharynx	Pharyngeal_gland	Pharyngeal_gland	Pharynx.Pharyngeal_gland.Pharyngeal_gland
+Pharyngeal_gland	Pharynx	Pharyngeal_gland	Pharyngeal_gland	Pharynx.Pharyngeal_gland.Pharyngeal_gland
+g1A (pharyngeal gland) 	Pharynx	Pharyngeal_gland	g1A	Pharynx.Pharyngeal_gland.g1A
+g1P (pharyngeal gland)	Pharynx	Pharyngeal_gland	g1P	Pharynx.Pharyngeal_gland.g1P
+g2 (pharyngeal gland) 	Pharynx	Pharyngeal_gland	g2	Pharynx.Pharyngeal_gland.g2
+Pharyngeal_muscle	Pharynx	Pharyngeal_muscle	Pharyngeal_muscle	Pharynx.Pharyngeal_muscle.Pharyngeal_muscle
+pm1_pm2	Pharynx	Pharyngeal_muscle	Pharyngeal_muscle	Pharynx.Pharyngeal_muscle.Pharyngeal_muscle
+pm1 pm2	Pharynx	Pharyngeal_muscle	Pharyngeal_muscle	Pharynx.Pharyngeal_muscle.Pharyngeal_muscle
+pm3_pm4_pm5	Pharynx	Pharyngeal_muscle	Pharyngeal_muscle	Pharynx.Pharyngeal_muscle.Pharyngeal_muscle
+pm6_pm7	Pharynx	Pharyngeal_muscle	Pharyngeal_muscle	Pharynx.Pharyngeal_muscle.Pharyngeal_muscle
+pm1_pm2 (pharyngeal muscle)	Pharynx	Pharyngeal_muscle	pm1_pm2	Pharynx.Pharyngeal_muscle.pm1_pm2
+ pm3_pm4_pm5 and pm6_pm7 (pharyngeal muscle)	Pharynx	Pharyngeal_muscle	pm3_to_pm7	Pharynx.Pharyngeal_muscle.pm3_to_pm7
+Pharynx	Pharynx	Pharynx	Pharynx	Pharynx.Pharynx.Pharynx

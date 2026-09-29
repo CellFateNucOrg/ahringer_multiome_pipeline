@@ -91,7 +91,7 @@ DefaultAssay(combined_seurat) = "RNA"
 combined_seurat = NormalizeData(combined_seurat)
 
 # QC 1: P-granule gene expression
-P_granule_genes = read.table("data/external_data/P_granule_transcripts.sorted.txt")
+P_granule_genes = read.table("external_data/P_granule_transcripts.sorted.txt")
 combined_seurat = AddModuleScore(combined_seurat, features = list(P_granule_genes$V1), name = "Pgranule")
 
 # QC 2: ambient RNA - genes with high soup expression in every batch

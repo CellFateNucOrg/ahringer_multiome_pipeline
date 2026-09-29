@@ -132,7 +132,7 @@ dev.off()
 # remove P-cell clusters before estimating contamination
 # get average expression per cluster of P-granule genes
 rnaseq_data_raw_filtered <- rnaseq_data_raw[row.names(rnaseq_data_raw) %in% genes_to_retain,]
-P_cells = read.table("data/external_data/P_granule_transcripts.sorted.txt")
+P_cells = read.table("external_data/P_granule_transcripts.sorted.txt")
 
 combined_data_seurat_nodoub = AddModuleScore(combined_data_seurat_nodoub, features = list(P_cells$V1), nbin = 10)
 
@@ -162,13 +162,18 @@ clusters_to_remove = names(combined_data_seurat_nodoub_avgExp_quant[combined_dat
 message("P-cell clusters excluded from contamination estimate: ", paste(clusters_to_remove, collapse = ","))
 
 pdf(file=paste0(plot_dir_w_date, "/", sample_id, ".", annotation, ".seurat_P_cell_clusters.noDub.pdf"), width=16, height = 8)
-p1 = DimPlot(combined_data_seurat_nodoub, reduction = "umap", label=T, cells.highlight = colnames(combined_data_seurat_nodoub[,combined_data_seurat_nodoub$seurat_clusters %in% clusters_to_remove]), pt.size = 0.3, sizes.highlight = 0.3) & NoLegend()
+if (length(clusters_to_remove) > 0) {
+  p1 = DimPlot(combined_data_seurat_nodoub, reduction = "umap", label=T, cells.highlight = colnames(combined_data_seurat_nodoub[,combined_data_seurat_nodoub$seurat_clusters %in% clusters_to_remove]), pt.size = 0.3, sizes.highlight = 0.3) & NoLegend()
+} else {
+  p1 = DimPlot(combined_data_seurat_nodoub, reduction = "umap", label=T, pt.size = 0.3) & NoLegend() &
+       ggtitle("No P-cell clusters identified (binarisation fallback)")
+}
 p2 = FeaturePlot(combined_data_seurat_nodoub, reduction = "umap", features = "Cluster1")  & scale_colour_gradientn(colours = feature_colours)
 print(p1 | p2)
 dev.off()
 
 ### remove barcodes from flagged clusters, then run SoupX
-flagged_barcodes = colnames(combined_data_seurat_nodoub[,combined_data_seurat_nodoub$seurat_clusters %in% clusters_to_remove])
+flagged_barcodes = colnames(combined_data_seurat_nodoub)[combined_data_seurat_nodoub$seurat_clusters %in% clusters_to_remove]
 rnaseq_data_nodub_filtered = rnaseq_data_nodub[,colnames(rnaseq_data_nodub) %nin% flagged_barcodes]
 if (length(clusters_to_remove) > 0) {
   combined_data_seurat_nodoub_filtered = subset(x = combined_data_seurat_nodoub, idents = clusters_to_remove, invert = TRUE)
@@ -236,7 +241,20 @@ dev.off()
 
 # add ATAC data quantified over the bulk scATAC peak set
 merged_peaks = import.bed(merged_peaks_file)
-fragpath <- paste0("data/sc/cellranger_arc/", sample_id, "/outs/atac_fragments_no_dash.tsv.gz")
+fragpath_raw <- paste0("data/sc/cellranger_arc/", sample_id, "/outs/atac_fragments_no_dash.tsv.gz")
+# cellranger-arc produces a 6-column fragment file (chrom/start/end/barcode/count/strand).
+# Signac requires exactly 5 columns, so strip the strand column if present.
+fragpath <- sub("\\.tsv\\.gz$", "_5col.tsv.gz", fragpath_raw)
+if (!file.exists(fragpath)) {
+  message(sample_id, ": stripping strand column from fragment file for Signac compatibility...")
+  tmp_tsv <- tempfile(pattern = paste0(sample_id, "_frags5col_"), tmpdir = "/tmp", fileext = ".tsv")
+  ret <- system(paste0("zcat ", fragpath_raw, " | cut -f1-5 > ", tmp_tsv))
+  if (ret != 0) stop("cut -f1-5 failed when creating 5-column fragment file")
+  Rsamtools::bgzip(tmp_tsv, dest = fragpath, overwrite = TRUE)
+  Rsamtools::indexTabix(fragpath, format = "bed")
+  file.remove(tmp_tsv)
+  message(sample_id, ": 5-column fragment file written to ", fragpath)
+}
 
 fragments_sample <- CreateFragmentObject(fragpath, cells = colnames(combined_data_seurat_soupx))
 merged_peaks_matrix_filtered <- FeatureMatrix(fragments_sample, sep = c("-", "-"), features=merged_peaks, cells = colnames(combined_data_seurat_soupx))

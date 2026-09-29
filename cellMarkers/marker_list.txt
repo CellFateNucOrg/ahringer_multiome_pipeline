@@ -1,0 +1,12 @@
+# L3 marker tables for l3_lineage_annotation.R
+# Format: <path_to_marker_tsv>\t<short_label>
+# Lines starting with # are ignored.
+# Recommended starting point: markers_shared_min2studies (most conservative)
+
+/mnt/meister.data/jsemple/20260728_ma_10x_multi_l3_PMW941_1/ahringer_pipeline_claude/cellMarkers/markers_shared_min2studies.tsv	shared_min2studies
+/mnt/meister.data/jsemple/20260728_ma_10x_multi_l3_PMW941_1/ahringer_pipeline_claude/cellMarkers/markers_expansive_all_studies.tsv	expansive_all
+/mnt/meister.data/jsemple/20260728_ma_10x_multi_l3_PMW941_1/ahringer_pipeline_claude/cellMarkers/markers_cengen_L4_herm.tsv	cengen_L4
+/mnt/meister.data/jsemple/20260728_ma_10x_multi_l3_PMW941_1/ahringer_pipeline_claude/cellMarkers/markers_cengen_L1_herm.tsv	cengen_L1
+/mnt/meister.data/jsemple/20260728_ma_10x_multi_l3_PMW941_1/ahringer_pipeline_claude/cellMarkers/markers_cengen_adult_herm.tsv	cengen_adult
+/mnt/meister.data/jsemple/20260728_ma_10x_multi_l3_PMW941_1/ahringer_pipeline_claude/cellMarkers/markers_cao2017_L2.tsv	cao2017_L2
+/mnt/meister.data/jsemple/20260728_ma_10x_multi_l3_PMW941_1/ahringer_pipeline_claude/cellMarkers/markers_ghaddar2023_adult.tsv	ghaddar2023

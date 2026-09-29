@@ -39,9 +39,9 @@ RES_cellranger="--cpus-per-task=16 --mem=128G --time=48:00:00"
 RES_fragments="--cpus-per-task=2 --mem=32G --time=06:00:00"
 RES_starsolo="--cpus-per-task=12 --mem=64G --time=36:00:00"
 RES_star_sort="--cpus-per-task=8 --mem=128G --time=24:00:00"
-RES_dedup="--cpus-per-task=8 --mem=96G --time=24:00:00"
+RES_dedup="--cpus-per-task=8 --mem=192G --time=48:00:00"
 RES_bulk_peaks="--cpus-per-task=2 --mem=96G --time=12:00:00"
-RES_utr_extension="--cpus-per-task=2 --mem=64G --time=12:00:00"
+RES_utr_extension="--cpus-per-task=2 --mem=128G --time=12:00:00"
 RES_r_small="--cpus-per-task=1 --mem=16G --time=04:00:00"
 RES_emptydrops="--cpus-per-task=1 --mem=32G --time=06:00:00"
 RES_soupx="--cpus-per-task=8 --mem=96G --time=12:00:00"
@@ -67,7 +67,7 @@ SOUPX_QUANTILE=0.80
 
 # STARsolo: extra options, e.g. "--soloBarcodeReadLength 0" if GEX R1 is longer than 28 bp
 STAR_EXTRA_OPTS="--soloBarcodeReadLength 0"
-DEDUP_PARALLEL=4          # umi_tools chunks deduplicated in parallel (memory hungry)
+DEDUP_PARALLEL=2          # reduced from 4: each split BAM ~3.4GB, umi_tools uses ~10x RAM
 
 # 3' UTR extension
 UTR_EXT_BIN=100
@@ -82,6 +82,11 @@ MIN_WNN_FEATURES=200
 # final cell type assignment
 # optional table "cluster_number<TAB>lineage_label" for late clusters (see config/late_cluster_reassignment.tsv)
 LATE_CLUSTER_TABLE=${PIPELINE_DIR}/config/late_cluster_reassignment.tsv
+# marker tables for L3 tissue annotation (l3_lineage_annotation.R); one TSV path per line
+MARKER_LIST_FILE=${PIPELINE_DIR}/cellMarkers/marker_list.txt
+# optional taxonomy TSV for raw->tissue_type lookup (for per-study marker files)
+MARKER_TAXONOMY_FILE=${PIPELINE_DIR}/cellMarkers/cell_type_taxonomy.tsv
+
 # cell types relabelled as 'unassigned' after inspection (paper: "Cxx"); space-separated, may be empty
 UNASSIGN_CELL_TYPES="Cxx"
 

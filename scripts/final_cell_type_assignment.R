@@ -27,7 +27,7 @@ out_prefix = paste0("seurat_objects/wt_all.all_samples.all_cells.", annotation)
 
 AB_barcodes_file = paste0("cell_type_annotation_all/AB.cell_assignment.", annotation, ".txt")
 E_MS_C_D_barcodes_file = paste0("cell_type_annotation_all/E_MS_C_D.cell_assignment.", annotation, ".txt")
-P_granule_file = "data/external_data/P_granule_transcripts.txt"
+P_granule_file = "external_data/P_granule_transcripts.txt"
 
 combined_seurat = readRDS(seurat_object_file)
 
@@ -96,7 +96,7 @@ combined_seurat$cell_type = as.character(combined_seurat$pcell)
 pcell_sucl_names = sort(unique(combined_seurat$cell_type[grep("^Pcell_", combined_seurat$cell_type)]))
 
 # accessibility of germline-specific m1m2 promoters distinguishes P2 < P3 < P4
-m1m2_elements = import.bed("data/external_data/reg_elements_all.elegans.gl_specific.m1m2.bed")
+m1m2_elements = import.bed("external_data/reg_elements_all.elegans.gl_specific.m1m2.bed")
 m1m2_elements_matrix <- FeatureMatrix(combined_seurat[["WNN"]]@fragments, sep = c("-", "-"), features=m1m2_elements, cells = colnames(combined_seurat))
 combined_seurat[["m1m2_elements"]] <- CreateChromatinAssay(counts = m1m2_elements_matrix, sep = c(":", "-"), fragments = combined_seurat[["WNN"]]@fragments)
 

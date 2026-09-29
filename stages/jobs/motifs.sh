@@ -8,8 +8,15 @@ activate_env "$ENV_MEME"
 input_bed=$1
 name=$2
 out=motifs/$name
+min_w=6; max_w=15; n_motifs=20
 mkdir -p $out
 genome_fa=${GENOME_DIR}/elegans.fa
+
+# skip if meme-chip results already exist
+if [[ -s $out/$name.w_${min_w}_${max_w}/combined.meme ]]; then
+    log "motifs for $name already computed, skipping"
+    exit 0
+fi
 
 # 2nd-order Markov background from the final accessible-site set
 [[ -s $ROUND2_DIR/all_peaks.fa ]] || fastaFromBed -bed $ROUND2_DIR/all_peaks.bed -fi $genome_fa -fo $ROUND2_DIR/all_peaks.fa
@@ -18,7 +25,6 @@ genome_fa=${GENOME_DIR}/elegans.fa
 cut -f 1,2,3 $input_bed | sort -k 1,1 -k2,2n | uniq > $out/$name.loci.bed
 fastaFromBed -fi $genome_fa -bed $out/$name.loci.bed -fo $out/$name.fa
 
-min_w=6; max_w=15; n_motifs=20
 db_opt=()
 if [[ -s "$MEME_DB" ]]; then db_opt=(-db "$MEME_DB"); else log "WARNING: MEME_DB not found ($MEME_DB); running without a motif database"; fi
 meme-chip -ccut 0 -oc $out/$name.w_${min_w}_${max_w} -minw $min_w -maxw $max_w -seed 32 -filter-thresh 0.05 -meme-mod zoops \
@@ -34,5 +40,5 @@ while read -r motif_n motif_name; do
 done < $res/combined.meme.motif_names
 
 fimo --max-stored-scores 1000000 --oc $out/fimo --thresh 0.001 $res/combined.meme $ROUND2_DIR/all_peaks.fa
-rm $out/$name.fa
+rm -f $out/$name.fa
 log "motifs for $name in $out"

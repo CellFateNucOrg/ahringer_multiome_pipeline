@@ -70,12 +70,32 @@ sed -i 's/version = pkg_resources.require("sinto")\[0\].version/version = _pkg_v
 Verify with `sinto --version` (should return `sinto 0.10.1`).
 The fix is also applied in `setup.sh` after env creation.
 
+
+### bulk_peaks / OOM + scratch dir
+Default 48 GB was OOM-killed during the `sort` step.
+- Bump `RES_bulk_peaks` in `config.sh` to `--mem=96G`.
+- Updated `stages/jobs/bulk_peaks.sh` to use `SCRATCH_DIR` for sort temp files (same pattern as `star_sort.sh`).
+
+### utr_extension: missing BLACKLIST and unsorted gene annotation
+Two bugs found after bulk_peaks completed:
+
+1. **Missing blacklist file**: `BLACKLIST` in `scripts/common.sh` pointed to `data/external_data/ce11-blacklist.bed`
+   which does not exist. Fixed by changing the path to `external_data/ce11-blacklist.bed` — the file
+   already exists there (`external_data/ce11-blacklist.bed`).
+
+2. **Gene annotation files not sorted in LC_ALL=C order**: The files
+   `species/elegans/gene_annotation/c_elegans.PRJNA13758.WS285.canonical_geneset{,.filtered}.gene_transcript_id.sorted.txt`
+   were sorted by transcript ID (field 2) rather than WBGene ID (field 1), causing `join` warnings inside
+   the Python GTF extension scripts. Fixed by re-sorting both files in-place with
+   `LC_ALL=C sort -k1,1 -o FILE FILE`.
+
 ### Resource settings (tuned for this dataset)
 | Variable | CPUs | RAM | Time |
 |---|---|---|---|
 | `RES_starsolo` | 12 | 64 GB | 36 h |
 | `RES_star_sort` | 8 | 128 GB | 24 h |
 | `RES_dedup` | 8 | 96 GB | 24 h |
+| `RES_bulk_peaks` | 2 | 96 GB | 12 h |
 | `RES_merge` | 4 | 192 GB | 24 h |
 | `RES_r_large` | 4 | 192 GB | 48 h |
 

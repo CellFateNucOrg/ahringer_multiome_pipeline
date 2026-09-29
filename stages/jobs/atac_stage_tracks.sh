@@ -9,6 +9,10 @@ activate_env "$ENV_MACS"
 out=$ROUND2_DIR/embryo_stage_tracks
 mkdir -p $out
 for stage in $(cut -f 1 tracks/stage_cell_types.tsv | sort -u); do
+    if [[ -s $out/$stage.cpm.bw ]]; then
+        log "stage $stage: track already exists, skipping"
+        continue
+    fi
     bws=()
     for ct in $(awk -F'\t' -v s="$stage" '$1 == s {print $2}' tracks/stage_cell_types.tsv); do
         f=$ROUND2_DIR/cell_type/bw/$ct.cpm.bw

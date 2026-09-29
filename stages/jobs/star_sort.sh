@@ -26,9 +26,14 @@ threads=${SLURM_CPUS_PER_TASK:-8}
 mem_per_thread=$(( ${SLURM_MEM_PER_NODE:-131072} * 1024 * 1024 * 3 / 4 / threads ))
 
 if [[ -n "${SCRATCH_DIR:-}" ]]; then
-    scratch="${SCRATCH_DIR}/star_sort_${SLURM_JOB_ID:-0}_${SLURM_ARRAY_TASK_ID:-0}"
+    scratch="${SCRATCH_DIR}/star_sort_${id}_${idx}"
+    # Wipe any stale scratch from a previously SIGKILL'd run
+    if [[ -d "$scratch" ]]; then
+        log "$id: removing stale scratch dir $scratch from a previous (killed?) run"
+        rm -rf "$scratch"
+    fi
     mkdir -p "$scratch"
-    trap 'rm -rf "$scratch"' EXIT
+    trap 'log "$id: sort failed or interrupted; cleaning scratch $scratch"; rm -rf "$scratch"' ERR EXIT
     sort_tmp_opt="-T $scratch/sort"
     log "$id: sorting BAM (threads=$threads, mem_per_thread=$(( mem_per_thread / 1024 / 1024 ))MB, scratch=$scratch)"
 else
@@ -42,6 +47,8 @@ samtools sort -@ "$threads" -m "${mem_per_thread}" $sort_tmp_opt \
 samtools index -@ "$threads" "$sorted"
 
 rm -f "$unsorted"
+trap - ERR EXIT  # disarm before continuing (scratch cleanup no longer needed)
+[[ -n "${SCRATCH_DIR:-}" ]] && rm -rf "$scratch"
 log "$id: BAM sort done → $sorted"
 
 # Generate whole-sample bigWigs (forward and reverse strand, CPM-normalised)

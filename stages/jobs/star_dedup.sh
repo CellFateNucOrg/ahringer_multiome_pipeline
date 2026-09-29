@@ -23,12 +23,26 @@ samtools index -@ $threads $bam
 # assign whitelist barcodes to 20 groups (00..19); the grouping only affects memory use, not the result
 total=$(wc -l < whitelist/737K-arc-v1.txt)
 awk -v n=$total 'BEGIN{OFS="\t"; chunk=int((n+19)/20)} {printf "%s\t%02d\n", $1, int((NR-1)/chunk)}' whitelist/737K-arc-v1.txt > $split_dir/barcode_groups.txt
-sinto filterbarcodes -b $bam -c $split_dir/barcode_groups.txt --outdir $split_dir -p $threads
 
+# skip sinto if all 20 split BAMs already exist (sinto takes ~8h; safe to resume after OOM in dedup)
+n_splits=$(ls $split_dir/[0-9][0-9].bam 2>/dev/null | wc -l)
+if [[ $n_splits -eq 20 ]]; then
+    log "$id: all 20 barcode-split BAMs present, skipping sinto"
+else
+    sinto filterbarcodes -b $bam -c $split_dir/barcode_groups.txt --barcodetag CR --outdir $split_dir -p $threads
+fi
+
+# per-BAM dedup: skip individual split BAMs whose dedup output already exists and is non-empty
 ls $split_dir/[0-9][0-9].bam | xargs -P "${DEDUP_PARALLEL}" -I{} bash -c '
-    f="$1"; samtools index "$f"
-    umi_tools dedup --stdin="$f" --log="${f%.bam}.dedup.log" --error="${f%.bam}.dedup.err" \
-        --extract-umi-method=tag --umi-tag=UR --cell-tag=CR --per-cell > "${f%.bam}.dedup.bam"' _ {}
+    f="$1"
+    out="${f%.bam}.dedup.bam"
+    if [[ -s "$out" ]]; then
+        echo "$(date "+%Y-%m-%d %H:%M:%S") $(basename $out) already exists, skipping"
+    else
+        samtools index "$f"
+        umi_tools dedup --stdin="$f" --log="${f%.bam}.dedup.log" --error="${f%.bam}.dedup.err" \
+            --extract-umi-method=tag --umi-tag=UR --cell-tag=CR --per-cell > "$out"
+    fi' _ {}
 
 samtools merge -f -h $bam -@ $threads $final $split_dir/[0-9][0-9].dedup.bam
 samtools index -@ $threads $final

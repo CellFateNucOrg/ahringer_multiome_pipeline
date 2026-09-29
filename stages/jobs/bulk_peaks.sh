@@ -8,6 +8,12 @@ export LC_ALL=C
 
 output_dir=$BULK_PEAKS_DIR
 mkdir -p $output_dir/macs $output_dir/tmp
+
+# skip if the final peak files already exist
+if [[ -s $output_dir/macs/resized_fragments.all_samples_peaks.summits_centered.bed ]]; then
+    log "bulk peaks already exist, skipping"
+    exit 0
+fi
 input_files=()
 for id in $(samples_where utr_ext yes); do input_files+=("data/sc/cellranger_arc/$id/outs/atac_fragments.tsv.gz"); done
 log "fragments: ${input_files[*]}"

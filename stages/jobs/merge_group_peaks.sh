@@ -30,14 +30,26 @@ filter_group_peaks() {
 
 case $1 in
 round1)
+    if [[ -s $ROUND1_DIR/all_peaks_merge.intergenic.00001.bed ]]; then
+        log "round 1 peaks already merged ($(wc -l < $ROUND1_DIR/all_peaks_merge.intergenic.00001.bed) peaks), skipping"
+        exit 0
+    fi
     filter_group_peaks $ROUND1_DIR 9 6 100 $ROUND1_DIR/all_peaks_merge.intergenic.00001.tmp.bed
     intersectBed -a $ROUND1_DIR/all_peaks_merge.intergenic.00001.tmp.bed -b $BLACKLIST -v > $ROUND1_DIR/all_peaks_merge.intergenic.00001.bed
     rm $ROUND1_DIR/all_peaks_merge.intergenic.00001.tmp.bed
     log "round 1 peaks: $(wc -l < $ROUND1_DIR/all_peaks_merge.intergenic.00001.bed)"
     ;;
 round2)
+    if [[ -s $ROUND2_DIR/all_peaks.pre_IDR.bed ]]; then
+        log "round 2 pre-IDR peaks already merged ($(wc -l < $ROUND2_DIR/all_peaks.pre_IDR.bed) peaks), skipping"
+        exit 0
+    fi
     for cell_annotation in cell_lineage cell_type; do
-        filter_group_peaks $ROUND2_DIR/$cell_annotation 8 3 50 $ROUND2_DIR/$cell_annotation/all_peaks_merge.intergenic.00001.bed
+        if [[ -s $ROUND2_DIR/$cell_annotation/all_peaks_merge.intergenic.00001.bed ]]; then
+            log "$cell_annotation peaks already merged, skipping"
+        else
+            filter_group_peaks $ROUND2_DIR/$cell_annotation 8 3 50 $ROUND2_DIR/$cell_annotation/all_peaks_merge.intergenic.00001.bed
+        fi
     done
     cat $ROUND2_DIR/*/all_peaks_merge.intergenic.00001.bed | sort -k 1,1 -k2,2n | mergeBed -i stdin -c 4 -o distinct \
         | awk 'BEGIN{OFS="\t";}{print $1, $2 + int(($3-$2)/2) - 100, $2 + int(($3-$2)/2) + 100, $4}' \

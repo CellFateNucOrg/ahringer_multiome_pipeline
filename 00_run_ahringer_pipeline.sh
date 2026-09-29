@@ -6,7 +6,7 @@
 
 
 WORK_DIR=/mnt/meister.data/jsemple/20260728_ma_10x_multi_l3_PMW941_1/ahringer_pipeline_claude
-stage=2
+stage=5
 ${WORK_DIR}/run_pipeline.sh $stage
 
 

@@ -25,6 +25,22 @@ Usage: $(basename "$0") <stage> [--after JOBID[:JOBID]] [--dry-run]
   10 tracks           (optional) RNA and ATAC bigWig tracks per cell type / embryo stage
   11 transient_genes  (optional) pseudo-bulk DESeq2 of pre- vs post-gastrulation lineages
   motifs <bed> <name> (optional) MEME-ChIP + FIMO on any BED file
+  qc_summary          (optional) rebuild the stage 5 rows of qc_summary/<sample>.${ANNOTATION}.qc_steps.tsv
+                      from an existing stage 5 run (newer runs write the table themselves)
+  neuron_diag [file]  (optional) neuron coverage check on the stage 7 object: pan-neuronal vs neuron tissue-panel
+                      scores per cluster against the tissue assignment (default: newest
+                      cell_type_annotation_all*/t_consensus_min2.cell_assignment file) -> plots/neuron_diagnostic/
+  neuron_atac_diag [file]  (optional) the same check on chromatin: ATAC accessibility of pan-neuronal vs muscle
+                      genes per cluster (ambient RNA does not affect it) -> plots/neuron_diagnostic/
+  atac_qc_diag [file] (optional) per-nucleus ATAC quality: TSS enrichment (all / medium / high-confidence TSSs),
+                      FRiP, nucleosome signal -> plots/neuron_diagnostic/ (run neuron_atac_diag first for grouping)
+  anchor_cell         (optional) find anchor cells (lag-2 + cdh-3 + hlh-2 triple-positive), then create a
+                      pseudobulk ATAC bigwig from their fragments -> analysis/anchor_cells/
+  lag2_diag           (optional) find lag-2 RNA-expressing cells, export accessible ATAC peaks, and plot
+                      coverage at the lag-2 locus -> analysis/lag2/
+  anchor_marker       (optional) classify cells into three marker groups (lag-2 only; ≥2 of lag-2/cdh-3/hlh-2;
+                      ≥1 of the three), produce expression + ATAC UMAPs, a Signac coverage plot at the lag-2
+                      locus, and CPM pseudobulk bigwigs for each group -> analysis/marker_cells/
 
 Options:
   --after IDS   make every job of this stage depend on these job ids (afterok)
@@ -167,10 +183,13 @@ case $STAGE in
     echo "Assignment files in cell_type_annotation_all/<label>.cell_assignment.$ANNOTATION.txt" >&2
     ;;
 8|cell_types)
+    # L3 adaptation: check for l3_lineage_annotation output, not embryo AB table.
+    # PRIMARY_ANNOTATION_LABEL defaults to the first non-comment label in MARKER_LIST_FILE.
+    _primary_label=${PRIMARY_ANNOTATION_LABEL:-$(grep -v '^\s*#' "$MARKER_LIST_FILE" | head -1 | awk -F'\t' '{print $2}')}
     need "${MERGED_PREFIX}.WNN_clean.rds" "stage 7"
-    need "cell_type_annotation_all/AB.cell_assignment.$ANNOTATION.txt" "stage 7"
+    need "cell_type_annotation_all/${_primary_label}.cell_assignment.${ANNOTATION}.txt" "stage 7"
     submit r_large final_cell_types "" -- "$J/r_script.sh" final_cell_type_assignment.R \
-        "${MERGED_PREFIX}.WNN_clean.rds" "$ANNOTATION" "$LATE_CLUSTER_TABLE" >/dev/null
+        "${MERGED_PREFIX}.WNN_clean.rds" "$ANNOTATION" "$_primary_label" >/dev/null
     ;;
 9|peaks_idr)
     cpl="${FINAL_PREFIX}.cells_per_cell_lineage.txt"; cpt="${FINAL_PREFIX}.cells_per_cell_type.txt"
@@ -201,11 +220,63 @@ case $STAGE in
     submit r_large transient_genes "" -- "$J/r_script.sh" transient_genes_DESeq.R \
         "${FINAL_PREFIX}.final_peakset_IDR_cell_cycle.rds" >/dev/null
     ;;
+neuron_diag)
+    need "${MERGED_PREFIX}.WNN_clean.rds" "stage 7"
+    submit diag neuron_diag "" -- "$J/r_script.sh" neuron_marker_diagnostic.R \
+        "${MERGED_PREFIX}.WNN_clean.rds" "$ANNOTATION" "${POS[0]:-}" >/dev/null
+    echo "When finished: plots/neuron_diagnostic/neuron_diagnostic.$ANNOTATION.pdf and .per_cluster.$ANNOTATION.tsv" >&2
+    ;;
+neuron_atac_diag)
+    need "${MERGED_PREFIX}.WNN_clean.rds" "stage 7"
+    submit diag neuron_atac_diag "" -- "$J/r_script.sh" neuron_atac_diagnostic.R \
+        "${MERGED_PREFIX}.WNN_clean.rds" "$ANNOTATION" "${POS[0]:-}" >/dev/null
+    echo "When finished: plots/neuron_diagnostic/neuron_atac_diagnostic.$ANNOTATION.pdf and .per_cluster.$ANNOTATION.tsv" >&2
+    ;;
+atac_qc_diag)
+    need "${MERGED_PREFIX}.WNN_clean.rds" "stage 7"
+    need species/elegans/gene_annotation/tss/ChenKreusSaitoTSS_highConf_872.bed "TSS set (high confidence)"
+    submit diag atac_qc_diag "" -- "$J/r_script.sh" atac_qc_diagnostic.R \
+        "${MERGED_PREFIX}.WNN_clean.rds" "$ANNOTATION" "${POS[0]:-}" >/dev/null
+    echo "When finished: plots/neuron_diagnostic/atac_qc_diagnostic.$ANNOTATION.pdf and .per_nucleus / .per_cluster TSVs" >&2
+    ;;
+qc_summary)
+    for id in $(sample_ids); do
+        need "seurat_objects/$id.$ANNOTATION.postSoupX.table.txt" "stage 5"
+        need "data/sc/rnaseq/$id/ED_RNA_${ANNOTATION}/ED_RNA_barcodes.txt" "stage 5"
+    done
+    submit soupx qc_summary "" --array=1-"$N" -- "$J/r_script.sh" qc_steps_stage5.R __SAMPLE__ "$ANNOTATION" \
+        "$MIN_ATAC_FRAGS" >/dev/null
+    ;;
 motifs)
     [[ ${#POS[@]} -eq 2 ]] || die "usage: $(basename "$0") motifs <bed file> <output name>"
     need "${POS[0]}" "input BED"
     need "$ROUND2_DIR/all_peaks.bed" "stage 9 (background model)"
     submit meme motifs_"${POS[1]}" "" -- "$J/motifs.sh" "$(readlink -f "${POS[0]}")" "${POS[1]}" >/dev/null
+    ;;
+anchor_cell)
+    need "${MERGED_PREFIX}.WNN_clean.rds" "stage 7"
+    first_sample=$(sample_ids | head -1)
+    need "data/sc/cellranger_arc/${first_sample}/outs/atac_fragments_no_dash_5col.tsv.gz" "stage 2"
+    r=$(submit diag anchor_cell_r "" -- "$J/r_script.sh" anchor_cell_analysis.R \
+        "${MERGED_PREFIX}.WNN_clean.rds" "$ANNOTATION")
+    submit diag anchor_cell_bw "$r" -- "$J/anchor_cell_pseudobulk_bw.sh" >/dev/null
+    echo "When finished: analysis/anchor_cells/ has barcodes, peaks BED, pseudobulk bigwig, and UMAPs" >&2
+    ;;
+lag2_diag)
+    need "${MERGED_PREFIX}.WNN_clean.rds" "stage 7"
+    submit diag lag2_diag "" -- "$J/r_script.sh" lag2_atac_analysis.R \
+        "${MERGED_PREFIX}.WNN_clean.rds" "$ANNOTATION" >/dev/null
+    echo "When finished: analysis/lag2/ has lag-2+ cell table, ATAC peaks BED, and coverage plots" >&2
+    ;;
+anchor_marker)
+    need "${MERGED_PREFIX}.WNN_clean.rds" "stage 7"
+    first_sample=$(sample_ids | head -1)
+    need "data/sc/cellranger_arc/${first_sample}/outs/atac_fragments_no_dash_5col.tsv.gz" "stage 2"
+    r=$(submit diag anchor_marker_r "" -- "$J/r_script.sh" anchor_marker_analysis.R \
+        "${MERGED_PREFIX}.WNN_clean.rds" "$ANNOTATION")
+    submit diag anchor_marker_bw "$r" -- "$J/anchor_marker_bw.sh" >/dev/null
+    echo "When finished: analysis/marker_cells/{lag2,any_2of3,any_1of3}/ has barcodes, ATAC peaks BED," >&2
+    echo "  pseudobulk bigwigs, and UMAPs; lag-2 locus coverage plot in analysis/marker_cells/" >&2
     ;;
 *) usage ;;
 esac

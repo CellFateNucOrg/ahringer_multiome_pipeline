@@ -27,7 +27,9 @@ sample_counts_per_cell <- Matrix::colSums(sample_tod_filtered)
 
 # inspect the UMI distribution to define the set of putative barhops
 pdf(file=paste0(plot_dir, "/", sample_id, ".", wb_annotation, ".counts_per_cell.pdf"), width=6, height = 6)
-hist(sample_counts_per_cell, breaks = seq(0, ceiling(max(sample_counts_per_cell)), by=1), xlim=c(0, 500), ylim=c(0, 10000), las=1)
+hist(sample_counts_per_cell, breaks = seq(0, ceiling(max(sample_counts_per_cell)), by=1), xlim=c(0, 500), ylim=c(0, 10000), las=1,
+     main = paste0(sample_id, ": RNA UMIs per barcode (zoom 0-500)"), xlab = "UMIs per barcode (lincRNA, protein-coding, pseudogene)")
+mtext("red = barhop cut-off (barcodes below are discarded); blue = ambient cut-off (barcodes below define the soup)", side = 3, line = 0.2, cex = 0.7)
 abline(v = c(barhop, ambient), col = c("red", "blue"), lty = 2)
 dev.off()
 
@@ -41,7 +43,9 @@ print(dim(ed_sample_l_ambient[ed_sample_l_ambient$Total >= ambient & ed_sample_l
 
 pdf(file=paste0(plot_dir, "/", sample_id, ".", wb_annotation, ".ambient_P.pdf"), width=10, height = 6)
 ed_sample_l_ambient_ambient = ed_sample_l_ambient[ed_sample_l_ambient$Total < ambient,]
-hist(ed_sample_l_ambient_ambient$PValue, breaks = 1000)
+hist(ed_sample_l_ambient_ambient$PValue, breaks = 1000, xlab = "EmptyDrops P-value",
+     main = paste0(sample_id, ": EmptyDrops P-values of ambient barcodes (< ", ambient, " UMIs)"))
+mtext("Should be roughly uniform; a spike near 0 means the ambient profile is poorly estimated", side = 3, line = 0.2, cex = 0.7)
 dev.off()
 
 # output the set of barcodes from real cells

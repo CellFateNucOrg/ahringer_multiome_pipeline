@@ -20,6 +20,11 @@ genome_index=${GENOME_DIR}/elegans.fa.fai
 output_macs_dir=$output_macs/$input_filename
 mkdir -p $output_resized_bed $output_macs_dir $output_bam $output_bw
 
+# Use node-local scratch for sort temp files if available
+sort_tmp="${SCRATCH_DIR:-$output_macs_dir}/sort_tmp_$$"
+mkdir -p "$sort_tmp"
+trap 'rm -rf "$sort_tmp"' EXIT
+
 if [[ ! -s $input_path/bed/$input_filename.bed ]]; then
     log "WARNING: no fragments for group $input_filename, skipping"; exit 0
 fi
@@ -31,7 +36,7 @@ if [[ -s $output_bw/$input_filename.cpm.bw ]]; then
 fi
 
 if [[ ! -s $output_resized_bed/$input_filename.resized.bed ]]; then
-    awk 'BEGIN{OFS="\t";}{if ($3 - $2 < 150) print; else if ($2 - 75 < 0) print $1, 0, $2 + 75, $4, $5 "\n" $1, $3-75, $3 + 75, $4, $5; else print $1, $2 - 75, $2 + 75, $4, $5 "\n" $1, $3-75, $3 + 75, $4, $5}' $input_path/bed/$input_filename.bed | sort -k 1,1 -k2,2n > $output_resized_bed/$input_filename.resized.bed
+    awk 'BEGIN{OFS="\t";}{if ($3 - $2 < 150) print; else if ($2 - 75 < 0) print $1, 0, $2 + 75, $4, $5 "\n" $1, $3-75, $3 + 75, $4, $5; else print $1, $2 - 75, $2 + 75, $4, $5 "\n" $1, $3-75, $3 + 75, $4, $5}' $input_path/bed/$input_filename.bed | sort -k 1,1 -k2,2n -T "$sort_tmp" > $output_resized_bed/$input_filename.resized.bed
 fi
 
 if [[ ! -s $output_macs_dir/${input_filename}_summits.bed ]]; then
@@ -39,7 +44,7 @@ if [[ ! -s $output_macs_dir/${input_filename}_summits.bed ]]; then
 fi
 
 if [[ ! -s $output_macs_dir/${input_filename}_treat_pileup.sorted.bw ]]; then
-    sort -k 1,1 -k2,2n $output_macs_dir/${input_filename}_treat_pileup.bdg > $output_macs_dir/${input_filename}_treat_pileup.sorted.bdg
+    sort -k 1,1 -k2,2n -T "$sort_tmp" $output_macs_dir/${input_filename}_treat_pileup.bdg > $output_macs_dir/${input_filename}_treat_pileup.sorted.bdg
     bedGraphToBigWig $output_macs_dir/${input_filename}_treat_pileup.sorted.bdg $CHR_SIZES $output_macs_dir/${input_filename}_treat_pileup.sorted.bw
     rm -f $output_macs_dir/${input_filename}_treat_pileup.bdg
 fi

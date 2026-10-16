@@ -48,7 +48,7 @@ else
         run_prefix="$prefix"
         # On failure: remove any partial STAR output from NFS so next run starts clean
         trap 'log "$id: STAR failed or interrupted; removing partial output under $outdir"; \
-              rm -rf "${prefix}Solo.out" "${prefix}_STARtmp" "${prefix}Aligned.out.bam"' ERR EXIT
+              rm -rf "${prefix}Solo.out" "${prefix}_STARtmp" "${prefix}Aligned.sortedByCoord.out.bam"' ERR EXIT
         log "$id: no scratch dir; writing STAR output to NFS directly"
     fi
 
@@ -56,7 +56,7 @@ else
     STAR --genomeDir star_idx/$idx --readFilesIn $R2 $R1 --soloType CB_UMI_Simple \
          --soloCBwhitelist whitelist/737K-arc-v1.txt --soloUMIlen 12 --soloCellFilter None --soloFeatures GeneFull \
          --soloMultiMappers EM --readFilesCommand zcat --runThreadN "${SLURM_CPUS_PER_TASK:-12}" \
-         --outFileNamePrefix "$run_prefix" --outSAMtype BAM Unsorted --twopassMode None \
+         --outFileNamePrefix "$run_prefix" --outSAMtype BAM SortedByCoordinate --twopassMode None \
          --outSAMattributes NH HI nM AS CR UR GX GN sS sQ sM RG XS \
          --outSAMattrRGline "ID:"$id --alignIntronMax 20000 ${STAR_EXTRA_OPTS}
 
@@ -64,7 +64,7 @@ else
     if [[ -n "${SCRATCH_DIR:-}" ]]; then
         trap - ERR EXIT  # disarm before copy; copy failure leaves scratch intact for inspection
         log "$id: copying STAR outputs from scratch to $outdir"
-        cp "${run_prefix}Aligned.out.bam" "${prefix}Aligned.out.bam"
+        cp "${run_prefix}Aligned.sortedByCoord.out.bam" "${prefix}Aligned.sortedByCoord.out.bam"
         cp -r "${run_prefix}Solo.out" "${prefix}Solo.out"
         for f in Log.out Log.final.out Log.progress.out SJ.out.tab; do
             [[ -e "${run_prefix}${f}" ]] && cp "${run_prefix}${f}" "${prefix}${f}"

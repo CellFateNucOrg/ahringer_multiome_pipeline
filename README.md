@@ -31,18 +31,69 @@ cd /mnt/meister.data/pmeister/Claude/multiome_pipeline
 
 ### Sample sheet (`config/samples.tsv`, tab-separated)
 
+One row per sample (one 10x multiome library). Several FASTQ runs of the same library go in the same row,
+comma-separated; never split one sample over several rows (the array jobs would write to the same folder).
+
 | column | meaning |
 |---|---|
-| `sample_id` | short id, **letters/digits only, no `_` or `-`** (it prefixes barcodes, e.g. `exp031_ACGT...`) |
+| `sample_id` | short id, preferably **letters/digits only** (it prefixes barcodes, e.g. `ctrl1_ACGT...`); never use `-` |
 | `gex_fastq_dir`, `gex_fastq_prefix` | GEX FASTQ folder and bcl2fastq sample name(s); comma-separate several runs (`exp031_rna,exp031_more_rna`) |
 | `atac_fastq_dir`, `atac_fastq_prefix` | same for ATAC |
-| `batch` | processing batch (used for batch-enriched cluster detection and SoupX soup ranges) |
-| `stage_group` | e.g. `early` / `late`; batches in the same group are compared with each other |
+| `batch` | processing batch: nuclei that were prepared / captured / sequenced together. Give every independently processed replicate its own batch. Used for batch-enriched cluster detection (stage 7) and SoupX soup ranges |
+| `stage_group` | the biological condition of the sample (developmental stage, strain, treatment). **Batches are only compared with other batches of the same `stage_group`**, so differences between conditions are never treated as batch artifacts |
 | `idr_rep` | `1` or `2`: pseudo-replicate for IDR (you need samples in both) |
 | `utr_ext` | `yes` if the sample is used for 3' UTR extension and bulk scATAC peaks (paper: early-embryo samples only) |
-| `barhop`, `ambient` | UMI thresholds for EmptyDrops/SoupX. Leave `NA` until stage 4, then fill them in |
+| `barhop`, `ambient` | UMI thresholds for EmptyDrops/SoupX. Leave `NA` until stage 4, then fill them in (see below) |
 
 FASTQs must follow the bcl2fastq naming `<prefix>_S<n>[_L00<n>]_R{1,2}_001.fastq.gz`.
+
+#### Choosing `batch` and `stage_group` (batch-enriched cluster removal, stage 7)
+
+Stage 7 removes WNN clusters whose nuclei come mostly from one batch, on the assumption that a real cell type
+is found in every replicate of the same condition. Within each `stage_group` it compares, for every cluster,
+the share of each batch's own nuclei that fall in that cluster (so batches of different size are comparable).
+A cluster is flagged if one batch's share is more than `BATCH_FOLD` (4) times another's. A stage group is only
+compared for a cluster when it contributes meaningfully to it: at least `BATCH_MIN_GROUP_NUCLEI` (30) nuclei
+**and** at least `BATCH_MIN_GROUP_FRACTION` (20 %) of the cluster. A cluster that is specific to one condition
+is therefore not removed because a few stray nuclei of the other condition happen to sit in one replicate.
+
+Rules of thumb:
+* one `batch` per independently processed replicate; replicates of the same condition share a `stage_group`
+* conditions you want to compare (strains, treatments, stages) get **different** `stage_group`s. If two
+  conditions share a stage group, a cell type that is lost or gained in one of them looks like a batch effect
+  and is removed
+* a stage group with only one batch is never checked, so with a single replicate per condition nothing is flagged
+* leave `LATE_STAGE_GROUPS` (`config/config.sh`) at `late` unless you want the paper's extra rule: clusters
+  made up of more than `LATE_MAX_FRACTION` (80 %) nuclei of those stage groups are flagged
+* for a first analysis set `BATCH_REMOVAL_MODE=report` in `config/config.sh`: flagged clusters are listed but kept.
+  Check `plots/batch_removal/merged_seurat.<annotation>.batch_enrichment_table.tsv` (nuclei per batch, reason for
+  flagging, top marker genes) and `batch_enrichment.pdf`, then switch back to `remove` if they are artifacts.
+  `PROTECT_CLUSTER_MARKERS` lists marker genes whose clusters are never removed
+
+Example: two replicates of a control strain and two of a test strain, in which some cell types may be lost
+
+| sample_id | batch | stage_group | idr_rep |
+|---|---|---|---|
+| ctrl1 | ctrl_b1 | control | 1 |
+| ctrl2 | ctrl_b2 | control | 2 |
+| test1 | test_b1 | test | 1 |
+| test2 | test_b2 | test | 2 |
+
+`ctrl1` is compared only with `ctrl2` and `test1` only with `test2`. A cluster present in both control replicates
+but missing from the test strain is kept; a cluster found in only one replicate of a strain is flagged.
+
+#### `barhop` and `ambient`
+
+Set them after stage 4 from `plots/barcode_rank_qc/*.pdf` (histogram of UMIs per barcode):
+* `barhop`: a value in the gap between the large spike of near-empty barcodes (barcode hopping, sequencing
+  errors; a few to ~40 UMIs) and the next peak. Barcodes below it are discarded.
+* `ambient`: the upper end of the second peak, which is made of empty droplets containing only ambient RNA
+  (the soup). Barcodes between `barhop` and `ambient` define the soup for EmptyDrops and SoupX; only barcodes
+  above `ambient` can be called nuclei. Do not set it so high that it cuts into the tail of real nuclei.
+* PMW941_1 (L3): `barhop` = 100, `ambient` = 300. Paper (embryos): 20–100 / 150–400.
+
+Check `plots/emptydrops/*ambient_P.pdf` after stage 5: the EmptyDrops P-values of the soup barcodes should be
+roughly uniform; a large spike near 0 means `ambient` includes barcodes that are not ambient RNA.
 
 ## 2. Running
 

@@ -54,30 +54,37 @@ TISSUE_COLOURS <- c(
   "Other"        = "#CCCCCC"   # light grey
 )
 
-# ── Scoring function (from lineage_specific_annotation.R) ─────────────────────
+# ── Scoring function ───────────────────────────────────────────────────────────
+# Returns a NORMALISED score in (-inf, 1].
+# Each gene contributes: +1 (perfect match), -0.5 (off by 1), -2.5 (off by 2).
+# Dividing by n keeps the score on the same scale regardless of marker-table size,
+# which is critical for large tables (100s–1000s of genes) where the original
+# absolute penalty would make every score deeply negative.
 scoring_markers <- function(marker_col, cluster_col) {
-  # marker_col, cluster_col : numeric vectors of same length, values in {0,1,2}
-  score  <- length(marker_col)
-  malus  <- score * 0.1
-  kill   <- malus  * 5
+  n <- length(marker_col)
+  if (n == 0) return(0)
+  score <- 0
   for (i in seq_along(marker_col)) {
     d <- abs(marker_col[i] - cluster_col[i])
-    if      (d == 2) score <- score - kill
-    else if (d == 1) score <- score - malus
+    if      (d == 0) score <- score + 1.0   # perfect
+    else if (d == 1) score <- score - 0.5   # one step off
+    else if (d == 2) score <- score - 2.5   # two steps off (same 5:1 kill:malus ratio)
   }
-  score
+  score / n   # range: -2.5 (all kills) to 1.0 (all perfect)
 }
 
 # ── Binarisation with fallback ─────────────────────────────────────────────────
+# On failure, return c(Inf, Inf) so all values → 0 (conservative: no false-high).
+# The previous fallback c(0.25*m, 0.6*m) with tiny m caused spurious value=2
+# assignments that killed scores via the penalty function.
 binarise_gene <- function(values, gene_name) {
   tryCatch({
     loc <- locmodes(values, mod0 = 2, display = FALSE)
     second_derivative_binarization(values, loc$cbw$bw, loc$locations, gene_name)
   }, error = function(e) {
     warning("binarisation failed for ", gene_name, " (", conditionMessage(e),
-            "); using 25%/60% of max as fallback thresholds")
-    m <- max(values)
-    if (m <= 0) c(Inf, Inf) else c(0.25 * m, 0.6 * m)
+            "); treating as unexpressed (Inf thresholds)")
+    c(Inf, Inf)   # all values → 0; avoids spurious kills from relative thresholds
   })
 }
 
@@ -99,6 +106,34 @@ taxonomy <- NULL
 if (taxonomy_file != "" && file.exists(taxonomy_file)) {
   taxonomy <- read.table(taxonomy_file, header = TRUE, sep = "\t", stringsAsFactors = FALSE)
   message("Taxonomy loaded: ", nrow(taxonomy), " entries")
+}
+
+# ── Marker gene names -> gene names of this annotation (via WBGeneID) ──────────
+# The marker tables use current WormBase gene labels, but the count matrix uses the names of the
+# WormBase release of this run (config WS, e.g. WS285). Genes renamed in between (e.g. spig-9 is
+# F53F4.13 in WS285) would silently drop out, so labels that are not names of this annotation are
+# translated label -> WBGeneID (tissueMarkers evidence / consensus tables) -> annotation name.
+id_tables <- strsplit(env_chr("MARKER_GENE_ID_TABLES",
+  "tissueMarkers/evidence/marker_evidence_long_tissue.csv tissueMarkers/consensus/markers_consensus_min2sources.csv"),
+  "[ ,]+")[[1]]
+label_to_id <- character(0)
+for (f in id_tables[file.exists(id_tables)]) {
+  id_tab <- read.csv(f, stringsAsFactors = FALSE)
+  if (all(c("gene_label", "WBGeneID") %in% colnames(id_tab)))
+    label_to_id <- c(label_to_id, setNames(id_tab$WBGeneID, id_tab$gene_label))
+}
+label_to_id <- label_to_id[!duplicated(names(label_to_id))]
+annot_gene_names <- read.table(paste0(canon_prefix(), ".gene_name.txt"), col.names = c("wbgene", "gene_name"),
+                               stringsAsFactors = FALSE)
+id_to_name <- setNames(annot_gene_names$gene_name, annot_gene_names$wbgene)
+message("Gene-name translation: ", length(label_to_id), " marker labels with WBGeneIDs, ",
+        env_chr("WS", "WS285"), " annotation with ", nrow(annot_gene_names), " genes")
+to_annotation_names <- function(g) {
+  need <- which(!(g %in% annot_gene_names$gene_name) & g %in% names(label_to_id))
+  new  <- unname(id_to_name[label_to_id[g[need]]])
+  ok   <- !is.na(new)
+  g[need[ok]] <- new[ok]
+  g
 }
 
 # ── Read marker list ───────────────────────────────────────────────────────────
@@ -139,6 +174,25 @@ for (row_i in seq_len(nrow(marker_entries))) {
                                row.names = 1, check.names = FALSE, stringsAsFactors = FALSE)
   message("  Table: ", nrow(markers_table), " genes x ", ncol(markers_table), " cell types")
 
+  # translate marker labels to the gene names of this annotation (see to_annotation_names above)
+  orig_names <- rownames(markers_table)
+  new_names  <- to_annotation_names(orig_names)
+  renamed    <- which(new_names != orig_names)
+  if (length(renamed) > 0) {
+    message("  Renamed to ", env_chr("WS", "WS285"), " names via WBGeneID: ", length(renamed), " (",
+            paste(head(paste0(orig_names[renamed], "->", new_names[renamed]), 8), collapse = ", "),
+            if (length(renamed) > 8) ", ..." else "", ")")
+  }
+  keep <- !duplicated(new_names)
+  if (any(!keep)) message("  Dropped ", sum(!keep), " duplicate gene(s) after renaming")
+  markers_table <- markers_table[keep, , drop = FALSE]
+  rownames(markers_table) <- new_names[keep]
+  # names shown in plots: the common name wherever one exists (marker label if it is a common name,
+  # else the annotation name), e.g. Y75B7AL.2 is shown as amn-1 and F57F5.1 as cpr-9
+  display_name <- setNames(ifelse(is_common_name(orig_names[keep]) | !is_common_name(new_names[keep]),
+                                  orig_names[keep], new_names[keep]),
+                           new_names[keep])
+
   rna_genes     <- rownames(combined_seurat[["RNA"]])
   markers_table <- markers_table[rownames(markers_table) %in% rna_genes, , drop = FALSE]
   if (nrow(markers_table) == 0) {
@@ -149,13 +203,13 @@ for (row_i in seq_len(nrow(marker_entries))) {
 
   # Average expression per WNN cluster
   Idents(combined_seurat) <- "seurat_clusters"
-  avg_exp     <- as.data.frame(AverageExpression(combined_seurat, slot = "data",
+  avg_exp     <- as.data.frame(AverageExpression(combined_seurat, layer = "data",
                                                   assays = "RNA", features = rownames(markers_table)))
   avg_exp     <- avg_exp[rownames(markers_table), , drop = FALSE]
   avg_exp_log <- log10(avg_exp + 1)
 
   # Column names: "RNA.0", "RNA.1", ... -> strip prefix to get cluster IDs
-  cluster_ids <- gsub("^RNA\\.", "", colnames(avg_exp_log))
+  cluster_ids <- gsub("^RNA\\.g?", "", colnames(avg_exp_log))
 
   # Binarise expression per gene
   pdf(file = file.path(plot_dir, paste0(safe_label, ".binarisation.", annotation, ".pdf")),
@@ -163,7 +217,7 @@ for (row_i in seq_len(nrow(marker_entries))) {
   avg_exp_quant <- avg_exp_log
   for (gene_i in seq_len(nrow(avg_exp_log))) {
     values     <- as.numeric(avg_exp_log[gene_i, ])
-    thresholds <- binarise_gene(values, rownames(avg_exp_log)[gene_i])
+    thresholds <- binarise_gene(values, display_name[[rownames(avg_exp_log)[gene_i]]])
     avg_exp_quant[gene_i, values <  thresholds[1]]                           <- 0
     avg_exp_quant[gene_i, values >= thresholds[1] & values < thresholds[2]] <- 1
     avg_exp_quant[gene_i, values >= thresholds[2]]                           <- 2
@@ -199,9 +253,14 @@ for (row_i in seq_len(nrow(marker_entries))) {
     second_best <- if (length(scores_ord) >= 2) scores_ord[2] else -Inf
 
     assigned <- NA_character_
-    if (best_score >= n_markers * 0.7 && length(best_idx) == 1) {
+    # Thresholds on the NORMALISED scale (scoring_markers now returns score/n_genes).
+    # Condition 1: best score ≥ 0.5 AND unique winner  → high-confidence assignment
+    # Condition 2: best score > 0   AND gap > 0.10     → weaker but distinct winner
+    # These replace the old absolute thresholds (n_markers*0.7, n_markers*0.5) that
+    # were only valid for small (10–20 gene) marker tables.
+    if (best_score >= 0.5 && length(best_idx) == 1) {
       assigned <- names(best_idx)
-    } else if (best_score > 0 && (best_score - second_best) > n_markers * 0.5) {
+    } else if (best_score > 0.0 && (best_score - second_best) > 0.10) {
       assigned <- names(best_idx[1])
     }
     cluster_assignment [cluster_ids[cl_i]] <- assigned
